@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Litef Robotics CMS
 
-## Getting Started
+Admin panelli katalog ve landing page sistemi. Next.js (App Router), Supabase ve Vercel üzerine kuruludur.
 
-First, run the development server:
+## Yerel geliştirme
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env.local` içine Supabase ve site URL değerlerini yazın.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 1) GitHub
 
-To learn more about Next.js, take a look at the following resources:
+Proje klasöründe (Cursor terminali):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cd /Users/ferhat/Desktop/litefrobotics
+git add .
+git commit -m "Initial Litef Robotics CMS"
+gh repo create litefrobotics --private --source=. --remote=origin --push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Repo zaten varsa ve uzak bağlantı yoksa:
 
-## Deploy on Vercel
+```bash
+git remote add origin https://github.com/<kullanici>/litefrobotics.git
+git push -u origin HEAD
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Sonraki güncellemeler:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+git add .
+git commit -m "Mesaj"
+git push
+```
+
+**Vercel repository access:** GitHub → Settings → Applications → Vercel → Configure. *Only select repositories* açıksa **litefrobotics** ekleyin veya *All repositories* seçin.
+
+---
+
+## 2) Supabase
+
+1. [supabase.com](https://supabase.com) → New project
+2. **SQL Editor** → `supabase/schema.sql` dosyasının tamamını yapıştırın → **Run**
+   - Tablolar, RLS, tetikleyiciler, storage bucket’ları ve varsayılan navbar/footer/ana sayfa oluşur
+3. **Authentication → Users → Add user** ile admin e-posta/şifre oluşturun
+4. Kullanıcının UUID değerini kopyalayıp SQL Editor’de çalıştırın:
+
+```sql
+insert into public.admin_users (id, email)
+values ('BURAYA-USER-UUID', 'admin@ornek.com');
+```
+
+5. **Project Settings → API**
+   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
+   - anon public → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - service_role → `SUPABASE_SERVICE_ROLE_KEY` (yalnızca sunucu / Vercel env)
+
+Bucket’lar SQL ile oluşmazsa Dashboard → Storage içinden public olarak açın:
+
+- `product-images`
+- `product-pdfs`
+- `category-heroes`
+- `blog-images`
+- `page-assets`
+
+---
+
+## 3) Vercel
+
+1. [vercel.com](https://vercel.com) → Add New Project → `litefrobotics` import
+2. Framework: Next.js (otomatik)
+3. Environment Variables:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=https://<proje>.vercel.app
+```
+
+4. Deploy. Özel domain bağlarsanız `NEXT_PUBLIC_SITE_URL` değerini güncelleyin.
+
+---
+
+## Kurulum checklist
+
+**GitHub**
+
+- [ ] Repo `litefrobotics` açıldı
+- [ ] Cursor terminalinden `origin` bağlandı, push çalışıyor
+- [ ] Vercel GitHub access içinde repo seçili
+
+**Vercel**
+
+- [ ] Repo import edildi
+- [ ] Dört env kaydı girildi
+- [ ] İlk deploy yeşil
+
+**Supabase**
+
+- [ ] `supabase/schema.sql` SQL Editor’de çalıştırıldı
+- [ ] Admin user oluşturuldu ve `admin_users` satırı eklendi
+- [ ] Bucket’lar ve API anahtarları hazır
+
+---
+
+## Admin
+
+`/admin/login` — yalnızca `admin_users` tablosundaki hesaplar girebilir.
+
+- Modül: HTML/CSS/JS section
+- Landing: kod yapıştırarak veya modül istifleyerek; title, slug, meta, ana sayfa radio
+- Navbar / footer: tüm vitrin sayfalarında sabit layout
+- Kategori hero + kart tasarımı
+- Ürün: çoklu görsel (WebP), PDF, kart tasarımı
+- Kart kodu: `LFCARD1.` ile başlar; default kart kod üretmez
+- Hakkımızda / İletişim (Maps embed URL)
+- Blog
