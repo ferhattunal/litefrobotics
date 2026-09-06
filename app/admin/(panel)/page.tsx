@@ -4,7 +4,7 @@ import { getDashboardCounts } from "@/lib/queries";
 export default async function AdminHomePage() {
   const counts = await getDashboardCounts();
   const cards = [
-    { href: "/admin/landing", label: "Landing page", value: counts.pages },
+    { href: "/admin/landing", label: "Sayfa Düzeni", value: counts.pages },
     { href: "/admin/moduller", label: "Modüller", value: counts.modules },
     { href: "/admin/kategoriler", label: "Kategoriler", value: counts.categories },
     { href: "/admin/urunler", label: "Ürünler", value: counts.products },

@@ -56,6 +56,7 @@ git push
 1. [supabase.com](https://supabase.com) → New project
 2. **SQL Editor** → `supabase/schema.sql` dosyasının tamamını yapıştırın → **Run**
    - Tablolar, RLS, tetikleyiciler, storage bucket’ları ve varsayılan navbar/footer/ana sayfa oluşur
+   - Şema daha önce çalıştırıldıysa yalnızca `supabase/schema-addon.sql` dosyasını çalıştırın (teklif, bayi, galeri, SSS vb.)
 3. **Authentication → Users → Add user** ile admin e-posta/şifre oluşturun
 4. Kullanıcının UUID değerini kopyalayıp SQL Editor’de çalıştırın:
 

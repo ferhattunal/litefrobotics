@@ -120,3 +120,88 @@ export type ContactPage = {
   meta_keywords: string;
   updated_at: string;
 };
+
+export type QuoteRequest = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  message: string;
+  product_name: string;
+  status: string;
+  created_at: string;
+};
+
+export type Dealer = {
+  id: string;
+  name: string;
+  city: string;
+  address: string;
+  phone: string;
+  email: string;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PriceList = {
+  id: string;
+  title: string;
+  file_url: string | null;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Rental = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image_url: string | null;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GalleryItem = {
+  id: string;
+  title: string;
+  image_url: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type ReferenceItem = {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  url: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type Faq = {
+  id: string;
+  question: string;
+  answer: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type Slide = {
+  id: string;
+  title: string;
+  image_url: string;
+  link_url: string;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+};
+
+export type AdminUser = {
+  id: string;
+  email: string;
+  created_at: string;
+};

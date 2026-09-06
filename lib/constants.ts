@@ -2,11 +2,19 @@ export const RESERVED_SLUGS = [
   "admin",
   "api",
   "blog",
+  "haberler",
   "kategoriler",
   "urunler",
   "hakkimizda",
   "iletisim",
   "login",
+  "teklif",
+  "bayiler",
+  "fiyat-listesi",
+  "kiralama",
+  "galeri",
+  "referanslar",
+  "sss",
 ] as const;
 
 export const STORAGE_BUCKETS = [
