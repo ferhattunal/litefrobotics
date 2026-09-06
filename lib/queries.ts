@@ -21,16 +21,24 @@ async function db() {
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   if (!hasSupabaseEnv()) return null;
-  const supabase = await db();
-  const { data } = await supabase.from("site_settings").select("*").eq("id", 1).maybeSingle();
-  return data as SiteSettings | null;
+  try {
+    const supabase = await db();
+    const { data } = await supabase.from("site_settings").select("*").eq("id", 1).maybeSingle();
+    return data as SiteSettings | null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getHomepage(): Promise<PageRecord | null> {
   if (!hasSupabaseEnv()) return null;
-  const supabase = await db();
-  const { data } = await supabase.from("pages").select("*").eq("is_homepage", true).maybeSingle();
-  return data as PageRecord | null;
+  try {
+    const supabase = await db();
+    const { data } = await supabase.from("pages").select("*").eq("is_homepage", true).maybeSingle();
+    return data as PageRecord | null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getPageBySlug(slug: string): Promise<PageRecord | null> {

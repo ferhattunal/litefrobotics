@@ -3,17 +3,25 @@ import { createAdminSupabase } from "./supabase/admin";
 import { createServerSupabase } from "./supabase/server";
 
 export async function getSessionUser() {
-  const supabase = await createServerSupabase();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  try {
+    const supabase = await createServerSupabase();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user;
+  } catch {
+    return null;
+  }
 }
 
 export async function isAdminUser(userId: string) {
-  const supabase = await createServerSupabase();
-  const { data } = await supabase.from("admin_users").select("id").eq("id", userId).maybeSingle();
-  return Boolean(data);
+  try {
+    const supabase = await createServerSupabase();
+    const { data } = await supabase.from("admin_users").select("id").eq("id", userId).maybeSingle();
+    return Boolean(data);
+  } catch {
+    return false;
+  }
 }
 
 export async function requireAdminSession() {
