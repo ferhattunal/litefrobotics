@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AdminForm } from "@/components/admin/admin-form";
 import { FileUploader } from "@/components/admin/file-uploader";
 import { savePost } from "@/lib/actions/blog";
 import { slugify } from "@/lib/utils";
@@ -12,7 +13,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
   const [cover, setCover] = useState(post?.cover_url ?? "");
 
   return (
-    <form action={savePost} className="grid max-w-4xl gap-5">
+    <AdminForm action={savePost} className="grid max-w-4xl gap-5" label="Yazıyı kaydet">
       {post ? <input type="hidden" name="id" value={post.id} /> : null}
       <input type="hidden" name="cover_url" value={cover} />
 
@@ -46,9 +47,6 @@ export function BlogForm({ post }: { post?: BlogPost }) {
         <input type="checkbox" name="published" value="1" defaultChecked={post?.published} />
         Yayınla
       </label>
-      <button type="submit" className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">
-        Yazıyı kaydet
-      </button>
-    </form>
+    </AdminForm>
   );
 }

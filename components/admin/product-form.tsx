@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AdminForm } from "@/components/admin/admin-form";
 import { CardDesignEditor } from "@/components/admin/card-design-editor";
 import { FileUploader } from "@/components/admin/file-uploader";
 import { MultiImageUploader } from "@/components/admin/multi-image-uploader";
@@ -28,7 +29,7 @@ export function ProductForm({ product, categories }: Props) {
   const fallback = resolveCardDesign(null, category) || DEFAULT_CARD;
 
   return (
-    <form action={saveProduct} className="grid max-w-5xl gap-6">
+    <AdminForm action={saveProduct} className="grid max-w-5xl gap-6" label="Ürünü kaydet">
       {product ? <input type="hidden" name="id" value={product.id} /> : null}
       <input type="hidden" name="pdf_url" value={pdf} />
       <input type="hidden" name="image_urls" value={images.join("\n")} />
@@ -94,9 +95,6 @@ export function ProductForm({ product, categories }: Props) {
         allowCode
       />
 
-      <button type="submit" className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">
-        Ürünü kaydet
-      </button>
-    </form>
+    </AdminForm>
   );
 }

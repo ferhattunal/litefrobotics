@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { AdminForm } from "@/components/admin/admin-form";
 import { AssetField } from "@/components/admin/asset-field";
 import { saveSlide } from "@/lib/actions/content";
 
 export function SlideCreateForm() {
   const [image, setImage] = useState("");
   return (
-    <form action={saveSlide} className="grid max-w-xl gap-4 rounded-2xl bg-white p-5">
+    <AdminForm action={saveSlide} className="grid max-w-xl gap-4 rounded-2xl bg-white p-5" label="Ekle">
       <label>
         <span className="admin-label">Başlık</span>
         <input className="admin-input" name="title" />
@@ -25,7 +26,6 @@ export function SlideCreateForm() {
         <input type="checkbox" name="published" value="1" defaultChecked />
         Yayınla
       </label>
-      <button className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">Ekle</button>
-    </form>
+    </AdminForm>
   );
 }

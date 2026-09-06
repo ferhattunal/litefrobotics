@@ -36,24 +36,24 @@ export function BrandAssetField({ label, value, onChange }: Props) {
     <div>
       <p className="settings-kicker">{label}</p>
       <div className="mt-2 flex items-start gap-3">
-        <div className="relative flex h-24 w-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#111318]">
+        <div className="relative flex h-24 w-28 items-center justify-center overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={value} alt="" className="max-h-full max-w-full object-contain" />
           ) : (
-            <span className="text-xs text-white/30">Önizleme</span>
+            <span className="text-xs text-stone-400">Önizleme</span>
           )}
           {value ? (
             <button
               type="button"
               onClick={() => onChange("")}
-              className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-xs"
+              className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs shadow"
             >
               ×
             </button>
           ) : null}
         </div>
-        <label className="flex h-24 flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-white/20 text-sm text-white/70 hover:border-[#9fe870] hover:text-white">
+        <label className="flex h-24 flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-stone-300 text-sm text-stone-500 hover:border-orange-600 hover:text-stone-800">
           <input type="file" accept="image/*" className="hidden" onChange={upload} disabled={busy} />
           {busy ? "Yükleniyor…" : "Görsel seç (WebP)"}
         </label>
@@ -70,7 +70,7 @@ export function BrandAssetField({ label, value, onChange }: Props) {
           Kullan
         </button>
       </div>
-      {error ? <p className="mt-2 text-sm text-red-400">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
     </div>
   );
 }

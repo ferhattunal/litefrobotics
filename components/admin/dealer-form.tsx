@@ -1,9 +1,10 @@
+import { AdminForm } from "@/components/admin/admin-form";
 import { saveDealer } from "@/lib/actions/content";
 import type { Dealer } from "@/lib/types";
 
 export function DealerForm({ dealer }: { dealer?: Dealer }) {
   return (
-    <form action={saveDealer} className="grid max-w-2xl gap-4">
+    <AdminForm action={saveDealer} className="grid max-w-2xl gap-4">
       {dealer ? <input type="hidden" name="id" value={dealer.id} /> : null}
       <label>
         <span className="admin-label">Bayi adı</span>
@@ -29,7 +30,6 @@ export function DealerForm({ dealer }: { dealer?: Dealer }) {
         <input type="checkbox" name="published" value="1" defaultChecked={dealer?.published ?? true} />
         Yayınla
       </label>
-      <button className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">Kaydet</button>
-    </form>
+    </AdminForm>
   );
 }

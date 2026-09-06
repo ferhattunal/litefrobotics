@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { SaveBar } from "@/components/admin/admin-form";
 import { saveSiteSettings } from "@/lib/actions/settings";
 import { BrandAssetField } from "@/components/admin/brand-asset-field";
 import {
@@ -58,14 +59,9 @@ export function SystemSettingsForm({ initial }: Props) {
       }}
       className="settings-shell"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Sistem ayarları</h1>
-          <p className="mt-1 text-sm text-white/50">Marka, logo, iletişim, navbar ve footer düzeni</p>
-        </div>
-        <button type="submit" className="settings-save">
-          {saved ? "Kaydedildi" : "Kaydet"}
-        </button>
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">Sistem ayarları</h1>
+        <p className="mt-1 text-sm text-stone-500">Marka, logo, iletişim, navbar ve footer düzeni</p>
       </div>
 
       <section className="settings-card">
@@ -107,7 +103,7 @@ export function SystemSettingsForm({ initial }: Props) {
 
       <section className="settings-card">
         <h2>Navbar</h2>
-        <p className="mt-1 text-sm text-white/50">
+        <p className="mt-1 text-sm text-stone-500">
           Kod yazmadan masaüstü ve mobil butonları, renkleri ve hover stillerini ayrı ayrı düzenleyin. Önizleme seçilen
           cihaza göre değişir.
         </p>
@@ -131,7 +127,7 @@ export function SystemSettingsForm({ initial }: Props) {
             </select>
             <span className="settings-help">Menü bağlantılarında hover efekti</span>
           </label>
-          <div className="flex rounded-full bg-[#111318] p-1">
+          <div className="flex rounded-full bg-stone-100 p-1">
             <button type="button" className={device === "desktop" ? "settings-pill-on" : "settings-pill"} onClick={() => setDevice("desktop")}>
               Masaüstü
             </button>
@@ -173,7 +169,7 @@ export function SystemSettingsForm({ initial }: Props) {
           </div>
           <button
             type="button"
-            className="mt-3 text-sm text-[#9fe870]"
+            className="mt-3 text-sm text-orange-700"
             onClick={() => setLinks([...links, { id: nid(), label: "Yeni", href: "/", color: "" }])}
           >
             + Buton ekle
@@ -193,13 +189,13 @@ export function SystemSettingsForm({ initial }: Props) {
 
         <div className="mt-8">
           <p className="settings-kicker">{device === "desktop" ? "Masaüstü önizleme" : "Mobil önizleme"}</p>
-          <div className="mt-2 overflow-x-auto rounded-xl border border-white/10 bg-[#0b0d10] px-4 py-3">
-            <style>{`.lf-preview-box .lf-nav{max-width:none;padding:8px 4px}.lf-preview-box .lf-links a{color:#d1d5db}.lf-preview-box .lf-logo{color:#9fe870}`}</style>
+          <div className="mt-2 overflow-x-auto rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">
+            <style>{`.lf-preview-box .lf-nav{max-width:none;padding:8px 4px}.lf-preview-box .lf-links a{color:#334155}.lf-preview-box .lf-logo{color:#0f766e}`}</style>
             <div className="lf-preview-box" dangerouslySetInnerHTML={{ __html: previewHtml }} />
           </div>
         </div>
 
-        <button type="button" className="mt-6 text-sm text-white/50" onClick={() => setAdvanced((value) => !value)}>
+        <button type="button" className="mt-6 text-sm text-stone-500" onClick={() => setAdvanced((value) => !value)}>
           Gelişmiş (HTML / CSS / JS)
         </button>
         {advanced ? (
@@ -222,7 +218,7 @@ export function SystemSettingsForm({ initial }: Props) {
 
       <section className="settings-card">
         <h2>Footer</h2>
-        <p className="mt-1 text-sm text-white/50">
+        <p className="mt-1 text-sm text-stone-500">
           Sitedeki alt bilgi metinlerini, sütunları ve bağlantıları buradan ekleyip düzenleyebilirsiniz. Telefon, e-posta
           ve adres üstteki iletişim alanından gelir.
         </p>
@@ -246,7 +242,7 @@ export function SystemSettingsForm({ initial }: Props) {
           <p className="settings-kicker mb-0">Sütunlar</p>
           <button
             type="button"
-            className="text-sm text-[#9fe870]"
+            className="text-sm text-orange-700"
             onClick={() =>
               patch({
                 footerColumns: [
@@ -322,7 +318,7 @@ export function SystemSettingsForm({ initial }: Props) {
           </div>
           <button
             type="button"
-            className="mt-3 text-sm text-[#9fe870]"
+            className="mt-3 text-sm text-orange-700"
             onClick={() => patch({ footerLinks: [...config.footerLinks, { id: nid(), label: "Yeni", href: "/" }] })}
           >
             + Bağlantı ekle
@@ -346,6 +342,7 @@ export function SystemSettingsForm({ initial }: Props) {
           </div>
         ) : null}
       </section>
+      <SaveBar saved={saved} />
     </form>
   );
 }
@@ -362,7 +359,7 @@ function FooterColumnEditor({
   onRemove: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 p-4">
+    <div className="rounded-xl border border-stone-200 p-4">
       <div className="grid gap-3 md:grid-cols-[1fr_180px_auto] md:items-end">
         <label>
           <span className="settings-kicker">Sütun başlığı</span>
@@ -428,7 +425,7 @@ function FooterColumnEditor({
           </div>
           <button
             type="button"
-            className="mt-2 text-sm text-[#9fe870]"
+            className="mt-2 text-sm text-orange-700"
             onClick={() => onChange({ ...column, locations: [...column.locations, ""] })}
           >
             + Lokasyon ekle
@@ -453,7 +450,7 @@ function FooterColumnEditor({
           ))}
           <button
             type="button"
-            className="text-sm text-[#9fe870]"
+            className="text-sm text-orange-700"
             onClick={() => onChange({ ...column, links: [...column.links, { id: nid(), label: "Yeni", href: "/" }] })}
           >
             + Bağlantı ekle

@@ -8,8 +8,8 @@ export default async function AdminLoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-stone-950 px-6">
-      <form action={loginAction} className="w-full max-w-sm rounded-2xl bg-white p-8">
+    <div className="flex min-h-screen items-center justify-center bg-[#f4f4f1] px-6">
+      <form action={loginAction} className="w-full max-w-sm rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
         <p className="text-xs tracking-[0.2em] text-orange-700 uppercase">Litef Robotics</p>
         <h1 className="mt-2 text-2xl font-semibold">Admin girişi</h1>
         <label className="mt-6 block">

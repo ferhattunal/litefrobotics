@@ -1,6 +1,39 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "MiSans Latin";
+  src: url("/fonts/misans/MiSansLatin-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans Latin";
+  src: url("/fonts/misans/MiSansLatin-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans Latin";
+  src: url("/fonts/misans/MiSansLatin-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans Latin";
+  src: url("/fonts/misans/MiSansLatin-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
+  color-scheme: light;
   --background: #f4f4f1;
   --foreground: #111827;
   --accent: #c2410c;
@@ -10,19 +43,26 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "MiSans Latin", system-ui, sans-serif;
 }
 
 html,
 body {
   min-height: 100%;
+  color-scheme: light;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: "MiSans Latin", system-ui, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
 }
 
 .prose-litef :where(h1, h2, h3) {
@@ -42,7 +82,6 @@ body {
 
 .admin-textarea {
   min-height: 120px;
-  font-family: var(--font-mono), ui-monospace, monospace;
 }
 
 .admin-label {
@@ -54,13 +93,13 @@ body {
 }
 
 .settings-shell {
-  color: #f3f4f6;
+  color: #1c1917;
 }
 
 .settings-card {
   margin-top: 24px;
-  border: 1px solid #2a2f36;
-  background: #16181d;
+  border: 1px solid #e7e5e4;
+  background: #fff;
   border-radius: 18px;
   padding: 24px;
 }
@@ -77,21 +116,21 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: #78716c;
 }
 
 .settings-help {
   display: block;
   margin-top: 6px;
   font-size: 12px;
-  color: #7d8590;
+  color: #78716c;
 }
 
 .settings-input {
   width: 100%;
-  border: 1px solid #2e3338;
-  background: #111318;
-  color: #f3f4f6;
+  border: 1px solid #d6d3d1;
+  background: #fff;
+  color: #1c1917;
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 14px;
@@ -99,45 +138,135 @@ body {
 
 .settings-btn,
 .settings-mini,
-.settings-icon,
-.settings-save,
-.settings-pill,
-.settings-pill-on {
+.settings-icon {
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 13px;
-}
-
-.settings-btn,
-.settings-mini {
-  border: 1px solid #2e3338;
-  background: #1b1f24;
-  color: #f3f4f6;
+  border: 1px solid #d6d3d1;
+  background: #f5f5f4;
+  color: #1c1917;
 }
 
 .settings-icon {
   width: 36px;
   height: 36px;
-  border: 1px solid #2e3338;
-  background: #1b1f24;
-  color: #f3f4f6;
-}
-
-.settings-save {
-  background: #9fe870;
-  color: #102410;
-  font-weight: 700;
-  padding: 10px 16px;
 }
 
 .settings-pill {
   padding: 8px 16px;
-  color: #d1d5db;
+  color: #57534e;
 }
 
 .settings-pill-on {
   padding: 8px 16px;
-  background: #9fe870;
-  color: #102410;
+  background: #1c1917;
+  color: #fff;
   font-weight: 600;
+}
+
+.save-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+  pointer-events: none;
+}
+
+.save-toast-on {
+  animation: save-pop 2.6s ease forwards;
+}
+
+.save-check {
+  position: relative;
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-check-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #16a34a;
+}
+
+.save-toast-on .save-check-ring {
+  animation: save-ring 2.6s ease forwards;
+}
+
+.save-check svg {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.save-check path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+}
+
+.save-toast-on .save-check path {
+  animation: save-check-draw 0.45s 0.12s ease forwards;
+}
+
+@keyframes save-ring {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  14% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  22% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  78% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+}
+
+@keyframes save-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes save-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.86);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0) scale(1.04);
+  }
+  22% {
+    transform: translateY(0) scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
 }

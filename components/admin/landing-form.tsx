@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AdminForm } from "@/components/admin/admin-form";
 import { savePage } from "@/lib/actions/pages";
 import { slugify } from "@/lib/utils";
 import type { ModuleRecord, PageModule, PageRecord, RenderMode } from "@/lib/types";
@@ -37,7 +38,7 @@ export function LandingForm({ page, modules, assigned = [], defaultMode }: Props
   }
 
   return (
-    <form action={savePage} className="grid max-w-5xl gap-5">
+    <AdminForm action={savePage} className="grid max-w-5xl gap-5" label="Landing page kaydet">
       {page ? <input type="hidden" name="id" value={page.id} /> : null}
       <input type="hidden" name="render_mode" value={mode} />
       <input type="hidden" name="module_ids" value={selected.join(",")} />
@@ -167,9 +168,6 @@ export function LandingForm({ page, modules, assigned = [], defaultMode }: Props
         </div>
       )}
 
-      <button type="submit" className="w-fit rounded-lg bg-orange-700 px-4 py-2 text-white">
-        Landing page kaydet
-      </button>
-    </form>
+    </AdminForm>
   );
 }

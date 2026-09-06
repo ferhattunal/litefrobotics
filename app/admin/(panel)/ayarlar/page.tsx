@@ -9,8 +9,6 @@ export default async function SettingsAdminPage() {
   const config = parseSiteConfig(settings);
 
   return (
-    <div className="-m-6 min-h-[calc(100vh-73px)] bg-[#0f1115] p-6">
-      <SystemSettingsForm initial={config} />
-    </div>
+    <SystemSettingsForm initial={config} />
   );
 }

@@ -52,19 +52,22 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
       </div>
 
       {open ? (
-        <div className="fixed inset-0 z-50 md:hidden" style={{ background: "rgba(17, 24, 39, 0.7)" }}>
-          <div className="flex justify-end p-4">
-            <button
-              type="button"
-              aria-label="Menüyü kapat"
-              onClick={() => setOpen(false)}
-              className="h-10 w-10 rounded-full bg-white text-lg font-semibold text-stone-800"
-            >
-              ×
-            </button>
-          </div>
-          <div className="lf-mobile-menu px-6 text-white [&_a]:block [&_a]:py-3 [&_a]:text-lg [&_a]:text-white [&_.lf-actions]:mt-4 [&_.lf-links]:flex [&_.lf-links]:flex-col [&_.lf-logo]:mb-4 [&_.lf-nav]:flex [&_.lf-nav]:flex-col [&_.lf-nav]:items-start">
-            <div dangerouslySetInnerHTML={{ __html: html }} />
+        <div className="fixed inset-0 z-50 md:hidden">
+          <button type="button" aria-label="Menüyü kapat" className="absolute inset-0 bg-stone-900/15" onClick={() => setOpen(false)} />
+          <div className="absolute inset-y-0 right-0 flex w-[min(100%,320px)] flex-col bg-white shadow-xl">
+            <div className="flex justify-end p-4">
+              <button
+                type="button"
+                aria-label="Menüyü kapat"
+                onClick={() => setOpen(false)}
+                className="h-10 w-10 rounded-full border border-stone-200 text-lg font-semibold text-stone-800"
+              >
+                ×
+              </button>
+            </div>
+            <div className="lf-mobile-menu px-6 text-stone-800 [&_a]:block [&_a]:py-3 [&_a]:text-lg [&_a]:text-stone-800 [&_.lf-actions]:mt-4 [&_.lf-links]:flex [&_.lf-links]:flex-col [&_.lf-logo]:mb-4 [&_.lf-nav]:flex [&_.lf-nav]:flex-col [&_.lf-nav]:items-start">
+              <div dangerouslySetInnerHTML={{ __html: html }} />
+            </div>
           </div>
         </div>
       ) : null}

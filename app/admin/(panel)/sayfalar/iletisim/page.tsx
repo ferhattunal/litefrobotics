@@ -1,3 +1,4 @@
+import { AdminForm } from "@/components/admin/admin-form";
 import { saveContactPage } from "@/lib/actions/cms-pages";
 import { getContactPage } from "@/lib/queries";
 
@@ -7,7 +8,7 @@ export default async function ContactAdminPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold">İletişim</h1>
-      <form action={saveContactPage} className="grid max-w-3xl gap-5">
+      <AdminForm action={saveContactPage} className="grid max-w-3xl gap-5">
         <label>
           <span className="admin-label">Başlık</span>
           <input className="admin-input" name="title" defaultValue={page?.title} />
@@ -45,10 +46,7 @@ export default async function ContactAdminPage() {
           <span className="admin-label">Meta keywords</span>
           <input className="admin-input" name="meta_keywords" defaultValue={page?.meta_keywords} />
         </label>
-        <button type="submit" className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">
-          Kaydet
-        </button>
-      </form>
+      </AdminForm>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AdminForm } from "@/components/admin/admin-form";
 import { CardDesignEditor } from "@/components/admin/card-design-editor";
 import { FileUploader } from "@/components/admin/file-uploader";
 import { saveCategory } from "@/lib/actions/categories";
@@ -15,7 +16,7 @@ export function CategoryForm({ category }: { category?: Category }) {
   const [design, setDesign] = useState<CardDesign | null>(category?.card_design ?? null);
 
   return (
-    <form action={saveCategory} className="grid max-w-5xl gap-6">
+    <AdminForm action={saveCategory} className="grid max-w-5xl gap-6" label="Kategoriyi kaydet">
       {category ? <input type="hidden" name="id" value={category.id} /> : null}
       <input type="hidden" name="hero_image_url" value={hero} />
       <input type="hidden" name="card_design" value={design ? JSON.stringify(design) : ""} />
@@ -65,9 +66,6 @@ export function CategoryForm({ category }: { category?: Category }) {
         allowCode
       />
 
-      <button type="submit" className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">
-        Kategoriyi kaydet
-      </button>
-    </form>
+    </AdminForm>
   );
 }

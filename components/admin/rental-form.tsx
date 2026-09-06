@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AdminForm } from "@/components/admin/admin-form";
 import { AssetField } from "@/components/admin/asset-field";
 import { saveRental } from "@/lib/actions/content";
 import { slugify } from "@/lib/utils";
@@ -11,7 +12,7 @@ export function RentalForm({ item }: { item?: Rental }) {
   const [slug, setSlug] = useState(item?.slug ?? "");
   const [image, setImage] = useState(item?.image_url ?? "");
   return (
-    <form action={saveRental} className="grid max-w-2xl gap-4">
+    <AdminForm action={saveRental} className="grid max-w-2xl gap-4">
       {item ? <input type="hidden" name="id" value={item.id} /> : null}
       <label>
         <span className="admin-label">Başlık</span>
@@ -39,7 +40,6 @@ export function RentalForm({ item }: { item?: Rental }) {
         <input type="checkbox" name="published" value="1" defaultChecked={item?.published ?? true} />
         Yayınla
       </label>
-      <button className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">Kaydet</button>
-    </form>
+    </AdminForm>
   );
 }

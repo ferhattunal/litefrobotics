@@ -52,7 +52,7 @@ function Item({
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13.5px] text-white/90 hover:bg-white/10"
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13.5px] text-stone-700 hover:bg-stone-100"
     >
       <Icon className="h-[18px] w-[18px] shrink-0" />
       <span>{label}</span>
@@ -62,14 +62,14 @@ function Item({
 
 export function AdminSidebar() {
   return (
-    <aside className="flex max-h-screen flex-col bg-[#1b4332] text-white lg:sticky lg:top-0">
+    <aside className="flex max-h-screen flex-col border-r border-stone-200 bg-white lg:sticky lg:top-0">
       <Link href="/admin" className="flex items-center gap-3 px-4 py-5">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#c2410c] text-[10px] font-bold tracking-wide">
+        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#c2410c] text-[10px] font-bold tracking-wide text-white">
           LiTEF
         </span>
         <span>
-          <span className="block text-[15px] font-semibold leading-tight">Litef Robotics</span>
-          <span className="block text-[11px] tracking-[0.14em] text-white/70">YÖNETİM PANELİ</span>
+          <span className="block text-[15px] font-semibold leading-tight text-stone-900">Litef Robotics</span>
+          <span className="block text-[11px] tracking-[0.14em] text-stone-400">YÖNETİM PANELİ</span>
         </span>
       </Link>
 
@@ -81,9 +81,7 @@ export function AdminSidebar() {
         </div>
         {GROUPS.map((group) => (
           <div key={group.group}>
-            <p className="px-3 pb-1.5 text-[10px] font-semibold tracking-[0.18em] text-white/45">
-              {group.group}
-            </p>
+            <p className="px-3 pb-1.5 text-[10px] font-semibold tracking-[0.18em] text-stone-400">{group.group}</p>
             <div className="space-y-0.5">
               {group.items.map((item) => (
                 <Item key={item.href} {...item} />
@@ -93,8 +91,8 @@ export function AdminSidebar() {
         ))}
       </nav>
 
-      <form action={logoutAction} className="border-t border-white/10 px-4 py-4">
-        <button type="submit" className="text-sm text-white/60 hover:text-white">
+      <form action={logoutAction} className="border-t border-stone-200 px-4 py-4">
+        <button type="submit" className="text-sm text-stone-400 hover:text-stone-800">
           Çıkış yap
         </button>
       </form>

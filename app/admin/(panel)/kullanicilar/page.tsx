@@ -1,3 +1,4 @@
+import { AdminForm } from "@/components/admin/admin-form";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { addAdminUser, deleteAdminUser } from "@/lib/actions/content";
 import { getAdminUsers } from "@/lib/queries-content";
@@ -7,7 +8,7 @@ export default async function UsersAdminPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold">Kullanıcılar</h1>
-      <form action={addAdminUser} className="grid max-w-xl gap-4 rounded-2xl bg-white p-5">
+      <AdminForm action={addAdminUser} className="grid max-w-xl gap-4 rounded-2xl bg-white p-5" label="Admin ekle">
         <p className="text-sm text-stone-500">
           Önce Supabase Authentication içinden kullanıcı oluşturun, ardından UUID ve e-postayı ekleyin.
         </p>
@@ -19,8 +20,7 @@ export default async function UsersAdminPage() {
           <span className="admin-label">E-posta</span>
           <input className="admin-input" name="email" type="email" required />
         </label>
-        <button className="w-fit rounded-lg bg-stone-900 px-4 py-2 text-white">Admin ekle</button>
-      </form>
+      </AdminForm>
       <div className="mt-8 overflow-hidden rounded-2xl bg-white">
         <table className="w-full text-left text-sm">
           <thead className="bg-stone-50 text-stone-500">

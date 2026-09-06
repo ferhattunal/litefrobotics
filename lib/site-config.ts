@@ -279,7 +279,7 @@ export function generateNavbarHtml(config: SiteConfig, device: "desktop" | "mobi
 }
 
 export function generateNavbarCss(config: SiteConfig) {
-  return `.lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1120px; margin: 0 auto; padding: 16px 20px; }
+  return `.lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1120px; margin: 0 auto; padding: 16px 20px; font-family: "MiSans Latin", system-ui, sans-serif; }
 .lf-logo { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #0f766e; text-decoration: none; display: inline-flex; align-items: center; }
 .lf-logo img { display: block; height: 36px; width: auto; }
 .lf-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
@@ -350,12 +350,12 @@ export function generateFooterHtml(config: SiteConfig) {
 }
 
 export function generateFooterCss(config: SiteConfig) {
-  return `.lf-footer { background: #111827; color: #e5e7eb; }
+  return `.lf-footer { background: #f5f5f4; color: #1c1917; border-top: 1px solid #e7e5e4; font-family: "MiSans Latin", system-ui, sans-serif; }
 .lf-footer-inner { max-width: 1120px; margin: 0 auto; padding: 48px 20px 28px; display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-.lf-brand p { color: #9ca3af; font-size: 14px; line-height: 1.6; }
-.lf-col h3 { margin: 0 0 12px; font-size: 15px; }
-.lf-col a, .lf-social a, .lf-footer-links a { display: block; color: #fdba74; text-decoration: none; margin: 6px 0; font-size: 14px; }
-.lf-footer-bottom { max-width: 1120px; margin: 0 auto; padding: 0 20px 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: #9ca3af; font-size: 13px; }
+.lf-brand p { color: #78716c; font-size: 14px; line-height: 1.6; }
+.lf-col h3 { margin: 0 0 12px; font-size: 15px; color: #1c1917; }
+.lf-col a, .lf-social a, .lf-footer-links a { display: block; color: #c2410c; text-decoration: none; margin: 6px 0; font-size: 14px; }
+.lf-footer-bottom { max-width: 1120px; margin: 0 auto; padding: 0 20px 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: #78716c; font-size: 13px; }
 ${config.footerCss}`;
 }
 
