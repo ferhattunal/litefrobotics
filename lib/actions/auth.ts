@@ -8,7 +8,13 @@ export async function loginAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  const supabase = await createServerSupabase();
+  let supabase;
+  try {
+    supabase = await createServerSupabase();
+  } catch {
+    redirect(`/admin/login?error=${encodeURIComponent("Supabase bağlantısı kurulamadı. Env kayıtlarını kontrol edin.")}`);
+  }
+
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     redirect(`/admin/login?error=${encodeURIComponent("Giriş başarısız. Bilgileri kontrol edin.")}`);
@@ -32,8 +38,12 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  const supabase = await createServerSupabase();
-  await supabase.auth.signOut();
+  try {
+    const supabase = await createServerSupabase();
+    await supabase.auth.signOut();
+  } catch {
+    // Oturum kapatılamasa da giriş ekranına dön.
+  }
   revalidatePath("/", "layout");
   redirect("/admin/login");
 }

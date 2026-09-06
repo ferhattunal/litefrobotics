@@ -1,5 +1,5 @@
 import { createAdminSupabase } from "./supabase/admin";
-import { createServerSupabase } from "./supabase/server";
+import { createQuerySupabase } from "./supabase/query";
 import { hasSupabaseEnv } from "./utils";
 import type {
   AdminUser,
@@ -13,14 +13,14 @@ import type {
   Slide,
 } from "./types";
 
-async function db() {
-  return createServerSupabase();
+function db() {
+  return createQuerySupabase();
 }
 
 export async function listRows<T>(table: string, order = "created_at", ascending = false): Promise<T[]> {
   if (!hasSupabaseEnv()) return [];
   try {
-    const supabase = await db();
+    const supabase = db();
     const { data } = await supabase.from(table).select("*").order(order, { ascending });
     return (data ?? []) as T[];
   } catch {
@@ -30,9 +30,13 @@ export async function listRows<T>(table: string, order = "created_at", ascending
 
 export async function getRow<T>(table: string, id: string): Promise<T | null> {
   if (!hasSupabaseEnv()) return null;
-  const supabase = await db();
-  const { data } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
-  return data as T | null;
+  try {
+    const supabase = db();
+    const { data } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
+    return data as T | null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getQuotes() {
@@ -72,9 +76,13 @@ export async function getRental(id: string) {
 
 export async function getRentalBySlug(slug: string) {
   if (!hasSupabaseEnv()) return null;
-  const supabase = await db();
-  const { data } = await supabase.from("rentals").select("*").eq("slug", slug).maybeSingle();
-  return data as Rental | null;
+  try {
+    const supabase = db();
+    const { data } = await supabase.from("rentals").select("*").eq("slug", slug).maybeSingle();
+    return data as Rental | null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getGallery() {
