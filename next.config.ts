@@ -1,17 +1,31 @@
 import type { NextConfig } from "next";
 
-const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-  : undefined;
+function supabaseHostname() {
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  if (!value) return undefined;
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return undefined;
+  }
+}
+
+const hostname = supabaseHostname();
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["sharp"],
+  outputFileTracingIncludes: {
+    "/api/upload": [
+      "./node_modules/@img/sharp-linux-x64/**/*",
+      "./node_modules/@img/sharp-libvips-linux-x64/**/*",
+    ],
+  },
   images: {
-    remotePatterns: supabaseHostname
+    remotePatterns: hostname
       ? [
           {
             protocol: "https",
-            hostname: supabaseHostname,
+            hostname,
             pathname: "/storage/v1/object/public/**",
           },
         ]

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import sharp from "sharp";
 import { requireAdmin } from "@/lib/auth";
 import { STORAGE_BUCKETS, type StorageBucket } from "@/lib/constants";
 
@@ -42,6 +41,7 @@ export async function POST(request: Request) {
       contentType = "application/pdf";
       ext = "pdf";
     } else if (IMAGE_TYPES.has(file.type) || file.type.startsWith("image/")) {
+      const sharp = (await import("sharp")).default;
       buffer = await sharp(Buffer.from(await file.arrayBuffer())).webp({ quality: 82 }).toBuffer();
       contentType = "image/webp";
       ext = "webp";
