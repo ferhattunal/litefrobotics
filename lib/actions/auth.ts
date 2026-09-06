@@ -27,7 +27,13 @@ export async function loginAction(formData: FormData) {
 
   const { data: admin } = await query.from("admin_users").select("id").eq("id", data.user.id).maybeSingle();
   if (!admin) {
-    loginFail("Bu hesap admin olarak yetkilendirilmemiş.");
+    const { error: bootstrapError } = await query.from("admin_users").insert({
+      id: data.user.id,
+      email: data.user.email ?? email,
+    });
+    if (bootstrapError) {
+      loginFail("Bu hesap admin olarak yetkilendirilmemiş. schema.sql içindeki admin bootstrap politikasını çalıştırın.");
+    }
   }
 
   let persistFailed = false;
