@@ -16,26 +16,24 @@ export async function isAdminUser(userId: string) {
   return Boolean(data);
 }
 
-export async function requireAdmin() {
-  try {
-    const user = await getSessionUser();
-    if (!user) {
-      redirect("/admin/login");
-    }
-
-    const admin = await isAdminUser(user.id);
-    if (!admin) {
-      redirect("/admin/login");
-    }
-
-    return {
-      user,
-      admin: createAdminSupabase(),
-    };
-  } catch (error) {
-    if (error && typeof error === "object" && "digest" in error) {
-      throw error;
-    }
+export async function requireAdminSession() {
+  const user = await getSessionUser();
+  if (!user) {
     redirect("/admin/login");
   }
+
+  const allowed = await isAdminUser(user.id);
+  if (!allowed) {
+    redirect("/admin/login");
+  }
+
+  return user;
+}
+
+export async function requireAdmin() {
+  const user = await requireAdminSession();
+  return {
+    user,
+    admin: createAdminSupabase(),
+  };
 }

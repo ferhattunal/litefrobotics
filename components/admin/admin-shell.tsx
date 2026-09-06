@@ -10,6 +10,7 @@ type NavGroup = { group: string; items: NavLinkItem[] };
 type NavEntry = NavLinkItem | NavGroup;
 
 const NAV: NavEntry[] = [
+  { href: "/admin", label: "Özet" },
   { href: "/admin/landing", label: "Sayfa Düzeni" },
   { href: "/admin/moduller", label: "Modül Oluşturma" },
   {
@@ -45,7 +46,7 @@ const NAV: NavEntry[] = [
 
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
-  const active = pathname === href || (href !== "/admin" && pathname.startsWith(href));
+  const active = href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(`${href}/`);
   return (
     <Link
       href={href}

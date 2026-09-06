@@ -19,9 +19,13 @@ async function db() {
 
 export async function listRows<T>(table: string, order = "created_at", ascending = false): Promise<T[]> {
   if (!hasSupabaseEnv()) return [];
-  const supabase = await db();
-  const { data } = await supabase.from(table).select("*").order(order, { ascending });
-  return (data ?? []) as T[];
+  try {
+    const supabase = await db();
+    const { data } = await supabase.from(table).select("*").order(order, { ascending });
+    return (data ?? []) as T[];
+  } catch {
+    return [];
+  }
 }
 
 export async function getRow<T>(table: string, id: string): Promise<T | null> {

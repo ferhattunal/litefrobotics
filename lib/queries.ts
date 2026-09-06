@@ -198,19 +198,23 @@ export async function getDashboardCounts() {
   if (!hasSupabaseEnv() || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return { pages: 0, modules: 0, categories: 0, products: 0, posts: 0 };
   }
-  const admin = createAdminSupabase();
-  const [pages, modules, categories, products, posts] = await Promise.all([
-    admin.from("pages").select("id", { count: "exact", head: true }),
-    admin.from("modules").select("id", { count: "exact", head: true }),
-    admin.from("categories").select("id", { count: "exact", head: true }),
-    admin.from("products").select("id", { count: "exact", head: true }),
-    admin.from("blog_posts").select("id", { count: "exact", head: true }),
-  ]);
-  return {
-    pages: pages.count ?? 0,
-    modules: modules.count ?? 0,
-    categories: categories.count ?? 0,
-    products: products.count ?? 0,
-    posts: posts.count ?? 0,
-  };
+  try {
+    const admin = createAdminSupabase();
+    const [pages, modules, categories, products, posts] = await Promise.all([
+      admin.from("pages").select("id", { count: "exact", head: true }),
+      admin.from("modules").select("id", { count: "exact", head: true }),
+      admin.from("categories").select("id", { count: "exact", head: true }),
+      admin.from("products").select("id", { count: "exact", head: true }),
+      admin.from("blog_posts").select("id", { count: "exact", head: true }),
+    ]);
+    return {
+      pages: pages.count ?? 0,
+      modules: modules.count ?? 0,
+      categories: categories.count ?? 0,
+      products: products.count ?? 0,
+      posts: posts.count ?? 0,
+    };
+  } catch {
+    return { pages: 0, modules: 0, categories: 0, products: 0, posts: 0 };
+  }
 }
