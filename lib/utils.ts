@@ -1,4 +1,5 @@
 import { RESERVED_SLUGS } from "./constants";
+import { hasSupabaseConfig } from "./supabase/env";
 
 export function slugify(text: string) {
   return text
@@ -31,9 +32,7 @@ export function siteUrl() {
 }
 
 export function hasSupabaseEnv() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim(),
-  );
+  return hasSupabaseConfig();
 }
 
 export function formatDate(value: string) {

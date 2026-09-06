@@ -1,10 +1,9 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseQueryKey, getSupabaseUrl } from "./env";
 
 export function createQuerySupabase(): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const service = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
-  const key = service || anon;
+  const url = getSupabaseUrl();
+  const key = getSupabaseQueryKey();
   if (!url || !key) {
     throw new Error("Supabase ortam değişkenleri eksik.");
   }

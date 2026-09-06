@@ -1,8 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
+import { getSupabaseServiceKey, getSupabaseUrl } from "./env";
 
 export function createAdminSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const url = getSupabaseUrl();
+  const key = getSupabaseServiceKey();
   if (!url || !key) {
     throw new Error("Supabase servis anahtarları tanımlı değil.");
   }
