@@ -1,22 +1,16 @@
-import Link from "next/link";
+import { SystemSettingsForm } from "@/components/admin/system-settings-form";
+import { getSiteSettings } from "@/lib/queries";
+import { parseSiteConfig } from "@/lib/site-config";
 
-const LINKS = [
-  { href: "/admin/navbar-footer", label: "Navbar / Footer" },
-  { href: "/admin/sayfalar/hakkimizda", label: "Hakkımızda" },
-  { href: "/admin/sayfalar/iletisim", label: "İletişim" },
-];
+export const dynamic = "force-dynamic";
 
-export default function SettingsAdminPage() {
+export default async function SettingsAdminPage() {
+  const settings = await getSiteSettings();
+  const config = parseSiteConfig(settings);
+
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-semibold">Sistem Ayarları</h1>
-      <div className="grid max-w-xl gap-3">
-        {LINKS.map((link) => (
-          <Link key={link.href} href={link.href} className="rounded-2xl bg-white px-5 py-4 hover:bg-stone-50">
-            {link.label}
-          </Link>
-        ))}
-      </div>
+    <div className="-m-6 min-h-[calc(100vh-73px)] bg-[#0f1115] p-6">
+      <SystemSettingsForm initial={config} />
     </div>
   );
 }

@@ -52,3 +52,92 @@ body {
   color: #44403c;
   margin-bottom: 6px;
 }
+
+.settings-shell {
+  color: #f3f4f6;
+}
+
+.settings-card {
+  margin-top: 24px;
+  border: 1px solid #2a2f36;
+  background: #16181d;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.settings-card h2 {
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.settings-kicker {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.settings-help {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #7d8590;
+}
+
+.settings-input {
+  width: 100%;
+  border: 1px solid #2e3338;
+  background: #111318;
+  color: #f3f4f6;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.settings-btn,
+.settings-mini,
+.settings-icon,
+.settings-save,
+.settings-pill,
+.settings-pill-on {
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.settings-btn,
+.settings-mini {
+  border: 1px solid #2e3338;
+  background: #1b1f24;
+  color: #f3f4f6;
+}
+
+.settings-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #2e3338;
+  background: #1b1f24;
+  color: #f3f4f6;
+}
+
+.settings-save {
+  background: #9fe870;
+  color: #102410;
+  font-weight: 700;
+  padding: 10px 16px;
+}
+
+.settings-pill {
+  padding: 8px 16px;
+  color: #d1d5db;
+}
+
+.settings-pill-on {
+  padding: 8px 16px;
+  background: #9fe870;
+  color: #102410;
+  font-weight: 600;
+}

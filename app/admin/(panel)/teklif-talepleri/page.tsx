@@ -1,14 +1,22 @@
 import { DeleteButton } from "@/components/admin/delete-button";
 import { deleteQuote, updateQuoteStatus } from "@/lib/actions/content";
 import { getQuotes } from "@/lib/queries-content";
+import { getSiteSettings } from "@/lib/queries";
+import { parseSiteConfig } from "@/lib/site-config";
 import { formatDate } from "@/lib/utils";
 
 export default async function QuotesAdminPage() {
-  const quotes = await getQuotes();
+  const [quotes, settings] = await Promise.all([getQuotes(), getSiteSettings()]);
+  const emails = parseSiteConfig(settings).quoteEmails.trim();
 
   return (
     <div>
       <h1 className="text-2xl font-semibold">Teklif Talepleri</h1>
+      {emails ? (
+        <p className="mt-2 text-sm text-stone-500">
+          Bildirim mailleri: {emails.split(/\s+/).filter(Boolean).join(", ")}
+        </p>
+      ) : null}
       <div className="mt-6 overflow-hidden rounded-2xl bg-white">
         <table className="w-full text-left text-sm">
           <thead className="bg-stone-50 text-stone-500">

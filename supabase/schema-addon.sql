@@ -122,6 +122,8 @@ drop trigger if exists price_lists_updated_at on public.price_lists;
 create trigger price_lists_updated_at before update on public.price_lists
 for each row execute function public.set_updated_at();
 
+alter table public.site_settings add column if not exists config jsonb not null default '{}'::jsonb;
+
 drop trigger if exists rentals_updated_at on public.rentals;
 create trigger rentals_updated_at before update on public.rentals
 for each row execute function public.set_updated_at();

@@ -52,6 +52,7 @@ create table if not exists public.site_settings (
   footer_html text not null default '',
   footer_css text not null default '',
   homepage_page_id uuid references public.pages (id) on delete set null,
+  config jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 

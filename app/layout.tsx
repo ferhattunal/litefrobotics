@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getSiteSettings } from "@/lib/queries";
+import { parseSiteConfig } from "@/lib/site-config";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,13 +14,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Litef Robotics",
-    template: "%s | Litef Robotics",
-  },
-  description: "Endüstriyel robotik çözümler",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const config = parseSiteConfig(settings);
+  const name = config.brandName || "Litef Robotics";
+  return {
+    title: {
+      default: name,
+      template: `%s | ${name}`,
+    },
+    description: "Endüstriyel robotik çözümler",
+    icons: config.faviconUrl ? { icon: config.faviconUrl } : undefined,
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

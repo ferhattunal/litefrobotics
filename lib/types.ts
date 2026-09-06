@@ -1,3 +1,7 @@
+import type { SiteConfig } from "./site-config";
+
+export type { SiteConfig };
+
 export type RenderMode = "code" | "modules";
 
 export type CardDesign = {
@@ -15,6 +19,7 @@ export type SiteSettings = {
   footer_html: string;
   footer_css: string;
   homepage_page_id: string | null;
+  config?: SiteConfig | null;
   updated_at: string;
 };
 

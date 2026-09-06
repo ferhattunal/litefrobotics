@@ -1,14 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   html: string;
   css: string;
+  js?: string;
+  brandName?: string;
+  logoUrl?: string;
 };
 
-export function SiteHeader({ html, css }: Props) {
+export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUrl }: Props) {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!js?.trim()) return;
+    const script = document.createElement("script");
+    script.text = js;
+    document.body.appendChild(script);
+    return () => script.remove();
+  }, [js]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200/70 bg-white/90 backdrop-blur">
@@ -16,8 +27,13 @@ export function SiteHeader({ html, css }: Props) {
       <div className="hidden md:block" dangerouslySetInnerHTML={{ __html: html }} />
 
       <div className="flex h-14 items-center justify-between px-4 md:hidden">
-        <a href="/" className="text-sm font-semibold tracking-wide uppercase">
-          Litef Robotics
+        <a href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt={brandName} className="h-8 w-auto" />
+          ) : (
+            brandName
+          )}
         </a>
         <button
           type="button"
@@ -47,7 +63,7 @@ export function SiteHeader({ html, css }: Props) {
               ×
             </button>
           </div>
-          <div className="lf-mobile-menu px-6 text-white [&_a]:block [&_a]:py-3 [&_a]:text-lg [&_a]:text-white [&_.lf-links]:flex [&_.lf-links]:flex-col [&_.lf-nav]:flex [&_.lf-nav]:flex-col [&_.lf-nav]:items-start">
+          <div className="lf-mobile-menu px-6 text-white [&_a]:block [&_a]:py-3 [&_a]:text-lg [&_a]:text-white [&_.lf-actions]:mt-4 [&_.lf-links]:flex [&_.lf-links]:flex-col [&_.lf-logo]:mb-4 [&_.lf-nav]:flex [&_.lf-nav]:flex-col [&_.lf-nav]:items-start">
             <div dangerouslySetInnerHTML={{ __html: html }} />
           </div>
         </div>
