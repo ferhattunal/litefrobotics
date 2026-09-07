@@ -4,7 +4,12 @@ import { useMemo, useState } from "react";
 import { SaveBar } from "@/components/admin/admin-form";
 import { saveSiteSettings } from "@/lib/actions/settings";
 import { BrandAssetField } from "@/components/admin/brand-asset-field";
+import { ColorMixer } from "@/components/admin/color-mixer";
+import { DevicePreview } from "@/components/admin/device-preview";
 import {
+  generateFooterCss,
+  generateFooterHtml,
+  generateNavbarCss,
   generateNavbarHtml,
   type FooterColumn,
   type FooterLink,
@@ -30,12 +35,16 @@ function move<T>(list: T[], index: number, dir: -1 | 1) {
 export function SystemSettingsForm({ initial }: Props) {
   const [config, setConfig] = useState(initial);
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
+  const [footerDevice, setFooterDevice] = useState<"desktop" | "mobile">("desktop");
   const [advanced, setAdvanced] = useState(false);
   const [styleId, setStyleId] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
   const links = device === "desktop" ? config.desktopLinks : config.mobileLinks;
   const previewHtml = useMemo(() => generateNavbarHtml(config, device), [config, device]);
+  const previewCss = useMemo(() => generateNavbarCss(config), [config]);
+  const footerPreviewHtml = useMemo(() => generateFooterHtml(config), [config]);
+  const footerPreviewCss = useMemo(() => generateFooterCss(config), [config]);
 
   function patch(partial: Partial<SiteConfig>) {
     setConfig((current) => ({ ...current, ...partial }));
@@ -187,12 +196,23 @@ export function SystemSettingsForm({ initial }: Props) {
           </label>
         </div>
 
+        <div className="mt-6">
+          <ColorMixer
+            label="Navbar rengi"
+            value={config.navbarFill}
+            textColor={config.navbarTextColor}
+            onChange={(navbarFill, textColor) =>
+              patch({ navbarFill, ...(textColor ? { navbarTextColor: textColor } : {}) })
+            }
+            onTextColor={(navbarTextColor) => patch({ navbarTextColor })}
+          />
+        </div>
+
         <div className="mt-8">
-          <p className="settings-kicker">{device === "desktop" ? "Masaüstü önizleme" : "Mobil önizleme"}</p>
-          <div className="mt-2 overflow-x-auto rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">
-            <style>{`.lf-preview-box .lf-nav{max-width:none;padding:8px 4px}.lf-preview-box .lf-links a{color:#334155}.lf-preview-box .lf-logo{color:#0f766e}`}</style>
-            <div className="lf-preview-box" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-          </div>
+          <DevicePreview device={device} label={device === "desktop" ? "Web önizleme" : "Mobil önizleme"}>
+            <style>{previewCss}</style>
+            <div className="lf-site-header lf-preview-box" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+          </DevicePreview>
         </div>
 
         <button type="button" className="mt-6 text-sm text-stone-500" onClick={() => setAdvanced((value) => !value)}>
@@ -274,6 +294,34 @@ export function SystemSettingsForm({ initial }: Props) {
           <input className="settings-input" value={config.copyright} onChange={(e) => patch({ copyright: e.target.value })} />
           <span className="settings-help">Yıl için {"{year}"} yazın. Örn. © {"{year}"} Litef Robotics. Tüm hakları saklıdır.</span>
         </label>
+
+        <div className="mt-6">
+          <ColorMixer
+            label="Footer rengi"
+            value={config.footerFill}
+            textColor={config.footerTextColor}
+            onChange={(footerFill, textColor) =>
+              patch({ footerFill, ...(textColor ? { footerTextColor: textColor } : {}) })
+            }
+            onTextColor={(footerTextColor) => patch({ footerTextColor })}
+          />
+        </div>
+
+        <div className="mt-6 flex rounded-full bg-stone-100 p-1 w-fit">
+          <button type="button" className={footerDevice === "desktop" ? "settings-pill-on" : "settings-pill"} onClick={() => setFooterDevice("desktop")}>
+            Web
+          </button>
+          <button type="button" className={footerDevice === "mobile" ? "settings-pill-on" : "settings-pill"} onClick={() => setFooterDevice("mobile")}>
+            Mobil
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <DevicePreview device={footerDevice} label={footerDevice === "desktop" ? "Web önizleme" : "Mobil önizleme"}>
+            <style>{`${footerPreviewCss} .lf-footer-inner{max-width:none;padding:24px 16px;grid-template-columns:${footerDevice === "mobile" ? "1fr" : "repeat(auto-fit, minmax(140px, 1fr))"};}`}</style>
+            <div dangerouslySetInnerHTML={{ __html: footerPreviewHtml }} />
+          </DevicePreview>
+        </div>
 
         <div className="mt-6">
           <p className="settings-kicker">Alt bağlantılar</p>

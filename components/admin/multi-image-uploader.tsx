@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { UrlPasteField } from "@/components/admin/url-paste-field";
 
 type Props = {
   values: string[];
@@ -48,6 +49,10 @@ export function MultiImageUploader({ values, onChange }: Props) {
     <div className="grid gap-3">
       <label className="admin-label">Ürün görselleri (WebP olarak kaydedilir)</label>
       <input type="file" accept="image/*" multiple onChange={handleChange} disabled={busy} />
+      <UrlPasteField
+        label="Görsel URL yapıştır"
+        onApply={(url) => onChange([...values, url])}
+      />
       {busy ? <p className="text-sm text-stone-500">Dönüştürülüp yükleniyor…</p> : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <div className="grid gap-3 sm:grid-cols-3">

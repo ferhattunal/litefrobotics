@@ -1,3 +1,6 @@
+import { colorFillCss, contrastOn, DEFAULT_FOOTER_FILL, DEFAULT_NAV_FILL, parseColorFill } from "./color-fill";
+import type { ColorFill } from "./types";
+
 export type HoverAnimation = "underline" | "color" | "background" | "none";
 
 export type NavLink = {
@@ -43,6 +46,10 @@ export type SiteConfig = {
   mobileLinks: NavLink[];
   showPhoneButton: boolean;
   showWhatsappButton: boolean;
+  navbarFill: ColorFill;
+  navbarTextColor: string;
+  footerFill: ColorFill;
+  footerTextColor: string;
   navbarHtml: string;
   navbarCss: string;
   navbarJs: string;
@@ -94,6 +101,10 @@ export function defaultSiteConfig(): SiteConfig {
     mobileLinks: desktop.map((item) => ({ ...item, id: nid() })),
     showPhoneButton: false,
     showWhatsappButton: false,
+    navbarFill: DEFAULT_NAV_FILL,
+    navbarTextColor: "#111827",
+    footerFill: DEFAULT_FOOTER_FILL,
+    footerTextColor: "#1c1917",
     navbarHtml: "",
     navbarCss: "",
     navbarJs: "",
@@ -206,6 +217,10 @@ export function normalizeSiteConfig(raw?: Partial<SiteConfig> | null): SiteConfi
     footerLinks: raw.footerLinks ? parseFooterLinks(raw.footerLinks) : base.footerLinks,
     showPhoneButton: asBool(raw.showPhoneButton, base.showPhoneButton),
     showWhatsappButton: asBool(raw.showWhatsappButton, base.showWhatsappButton),
+    navbarFill: parseColorFill(raw.navbarFill, base.navbarFill),
+    navbarTextColor: asString(raw.navbarTextColor, base.navbarTextColor) || contrastOn(parseColorFill(raw.navbarFill, base.navbarFill)),
+    footerFill: parseColorFill(raw.footerFill, base.footerFill),
+    footerTextColor: asString(raw.footerTextColor, base.footerTextColor) || contrastOn(parseColorFill(raw.footerFill, base.footerFill)),
   };
 }
 
@@ -279,18 +294,22 @@ export function generateNavbarHtml(config: SiteConfig, device: "desktop" | "mobi
 }
 
 export function generateNavbarCss(config: SiteConfig) {
-  return `.lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1120px; margin: 0 auto; padding: 16px 20px; font-family: "MiSans Latin", system-ui, sans-serif; }
-.lf-logo { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #0f766e; text-decoration: none; display: inline-flex; align-items: center; }
+  const bg = colorFillCss(config.navbarFill);
+  const fg = config.navbarTextColor || contrastOn(config.navbarFill);
+  return `.lf-site-header { background: ${bg}; color: ${fg}; border-bottom: 1px solid color-mix(in srgb, ${fg} 12%, transparent); }
+.lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1120px; margin: 0 auto; padding: 16px 20px; font-family: "MiSans Latin", system-ui, sans-serif; background: transparent; color: ${fg}; }
+.lf-logo { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${fg}; text-decoration: none; display: inline-flex; align-items: center; }
 .lf-logo img { display: block; height: 36px; width: auto; }
 .lf-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-.lf-links a { color: #334155; text-decoration: none; font-size: 14px; font-weight: 500; position: relative; }
+.lf-links a { color: ${fg}; text-decoration: none; font-size: 14px; font-weight: 500; position: relative; opacity: 0.88; }
 .lf-actions { display: flex; align-items: center; gap: 8px; }
-.lf-search, .lf-action { border: 1px solid #d6d3d1; border-radius: 8px; padding: 6px 10px; font-size: 13px; color: #111; text-decoration: none; }
-.lf-hover-underline .lf-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #0f766e; transform: scaleX(0); transition: transform .2s; }
+.lf-search, .lf-action { border: 1px solid color-mix(in srgb, ${fg} 28%, transparent); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: ${fg}; text-decoration: none; }
+.lf-hover-underline .lf-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: ${fg}; transform: scaleX(0); transition: transform .2s; }
 .lf-hover-underline .lf-links a:hover::after { transform: scaleX(1); }
-.lf-hover-color .lf-links a:hover { color: #0f766e; }
+.lf-hover-color .lf-links a:hover { opacity: 1; }
 .lf-hover-background .lf-links a { padding: 6px 8px; border-radius: 8px; }
-.lf-hover-background .lf-links a:hover { background: #ecfdf5; color: #0f766e; }
+.lf-hover-background .lf-links a:hover { background: color-mix(in srgb, ${fg} 12%, transparent); opacity: 1; }
+.lf-mobile-bar { color: ${fg}; }
 ${config.navbarCss}`;
 }
 
@@ -350,12 +369,15 @@ export function generateFooterHtml(config: SiteConfig) {
 }
 
 export function generateFooterCss(config: SiteConfig) {
-  return `.lf-footer { background: #f5f5f4; color: #1c1917; border-top: 1px solid #e7e5e4; font-family: "MiSans Latin", system-ui, sans-serif; }
+  const bg = colorFillCss(config.footerFill);
+  const fg = config.footerTextColor || contrastOn(config.footerFill);
+  return `.lf-footer { background: ${bg}; color: ${fg}; border-top: 1px solid color-mix(in srgb, ${fg} 12%, transparent); font-family: "MiSans Latin", system-ui, sans-serif; }
 .lf-footer-inner { max-width: 1120px; margin: 0 auto; padding: 48px 20px 28px; display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-.lf-brand p { color: #78716c; font-size: 14px; line-height: 1.6; }
-.lf-col h3 { margin: 0 0 12px; font-size: 15px; color: #1c1917; }
-.lf-col a, .lf-social a, .lf-footer-links a { display: block; color: #c2410c; text-decoration: none; margin: 6px 0; font-size: 14px; }
-.lf-footer-bottom { max-width: 1120px; margin: 0 auto; padding: 0 20px 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: #78716c; font-size: 13px; }
+.lf-brand p { color: color-mix(in srgb, ${fg} 72%, transparent); font-size: 14px; line-height: 1.6; }
+.lf-col h3 { margin: 0 0 12px; font-size: 15px; color: ${fg}; }
+.lf-col a, .lf-social a, .lf-footer-links a { display: block; color: ${fg}; text-decoration: none; margin: 6px 0; font-size: 14px; opacity: 0.88; }
+.lf-footer-bottom { max-width: 1120px; margin: 0 auto; padding: 0 20px 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: color-mix(in srgb, ${fg} 70%, transparent); font-size: 13px; }
+.lf-footer .lf-logo { color: ${fg}; }
 ${config.footerCss}`;
 }
 

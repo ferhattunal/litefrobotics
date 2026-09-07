@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "../auth";
+import { requireStaff } from "../auth";
 
 export async function saveModule(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const payload = {
     name: String(formData.get("name") ?? "").trim(),
@@ -31,7 +31,7 @@ export async function saveModule(formData: FormData) {
 }
 
 export async function deleteModule(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const { error } = await admin.from("modules").delete().eq("id", id);
   if (error) throw new Error(error.message);

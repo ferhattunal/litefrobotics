@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { authEmailFromUsername, looksLikeEmail } from "../auth-email";
+import { createAdminSupabase } from "../supabase/admin";
 import { createQuerySupabase } from "../supabase/query";
 import { createServerSupabase } from "../supabase/server";
 
@@ -9,9 +11,33 @@ function loginFail(message: string): never {
   redirect(`/admin/login?error=${encodeURIComponent(message)}`);
 }
 
+async function resolveLoginEmail(identifier: string) {
+  try {
+    const admin = createAdminSupabase();
+    if (looksLikeEmail(identifier)) {
+      const { data } = await admin.from("admin_users").select("email,status,username").eq("email", identifier.toLowerCase()).maybeSingle();
+      if (data) return data;
+    }
+    const { data } = await admin.from("admin_users").select("email,status,username").eq("username", identifier).maybeSingle();
+    if (data) return data;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 export async function loginAction(formData: FormData) {
-  const email = String(formData.get("email") ?? "").trim();
+  const identifier = String(formData.get("username") ?? formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  if (!identifier || !password) {
+    loginFail("Kullanıcı adı ve şifre gerekli.");
+  }
+
+  const profile = await resolveLoginEmail(identifier);
+  if (profile?.status === "inactive") {
+    loginFail("Bu hesap pasif.");
+  }
+  const email = profile?.email || (looksLikeEmail(identifier) ? identifier.toLowerCase() : authEmailFromUsername(identifier));
 
   let query;
   try {
@@ -25,15 +51,23 @@ export async function loginAction(formData: FormData) {
     loginFail("Giriş başarısız. Bilgileri kontrol edin.");
   }
 
-  const { data: admin } = await query.from("admin_users").select("id").eq("id", data.user.id).maybeSingle();
+  const { data: admin } = await query.from("admin_users").select("id,status").eq("id", data.user.id).maybeSingle();
   if (!admin) {
+    const username = looksLikeEmail(identifier) ? identifier.split("@")[0] : identifier;
     const { error: bootstrapError } = await query.from("admin_users").insert({
       id: data.user.id,
       email: data.user.email ?? email,
+      username,
+      first_name: "",
+      last_name: "",
+      status: "active",
+      role: "admin",
     });
     if (bootstrapError) {
       loginFail("Bu hesap admin olarak yetkilendirilmemiş. schema.sql içindeki admin bootstrap politikasını çalıştırın.");
     }
+  } else if ((admin as { status?: string }).status === "inactive") {
+    loginFail("Bu hesap pasif.");
   }
 
   let persistFailed = false;

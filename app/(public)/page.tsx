@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageRenderer } from "@/components/public/page-renderer";
-import { getHomepage, getPageModules } from "@/lib/queries";
+import { ProductShowcase } from "@/components/public/product-showcase";
+import { getHomepage, getPageModules, getShowcaseProducts } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -14,22 +15,30 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const page = await getHomepage();
+  const [page, products] = await Promise.all([getHomepage(), getShowcaseProducts()]);
 
   if (!page) {
     return (
-      <section className="mx-auto max-w-3xl px-6 py-24 text-center">
-        <h1 className="text-4xl font-semibold">Litef Robotics</h1>
-        <p className="mt-4 text-stone-600">
-          Ana sayfa henüz tanımlanmadı. Supabase şemasını çalıştırdıktan sonra admin panelden bir landing
-          page&apos;i ana sayfa olarak işaretleyin.
-        </p>
-      </section>
+      <>
+        <section className="mx-auto max-w-3xl px-6 py-24 text-center">
+          <h1 className="text-4xl font-semibold">Litef Robotics</h1>
+          <p className="mt-4 text-stone-600">
+            Ana sayfa henüz tanımlanmadı. Supabase şemasını çalıştırdıktan sonra admin panelden bir landing
+            page&apos;i ana sayfa olarak işaretleyin.
+          </p>
+        </section>
+        <ProductShowcase title="Vitrin" products={products} />
+      </>
     );
   }
 
   const assigned = page.render_mode === "modules" ? await getPageModules(page.id) : [];
   const modules = assigned.map((item) => item.modules).filter(Boolean);
 
-  return <PageRenderer page={page} modules={modules} />;
+  return (
+    <>
+      <PageRenderer page={page} modules={modules} />
+      <ProductShowcase title="Vitrin" products={products} />
+    </>
+  );
 }

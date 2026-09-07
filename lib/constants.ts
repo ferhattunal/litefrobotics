@@ -23,6 +23,29 @@ export const STORAGE_BUCKETS = [
   "category-heroes",
   "blog-images",
   "page-assets",
+  "media",
+  "documents",
+] as const;
+
+export const FILE_MANAGER_BUCKETS = ["media", "documents"] as const;
+
+export const FOLDER_PLACEHOLDER = ".keep";
+
+export const IMAGE_RATIOS = ["1/1", "4/3", "16/9", "3/4", "auto"] as const;
+
+export const COLOR_PALETTE = [
+  "#ffffff",
+  "#111827",
+  "#1c1917",
+  "#0f766e",
+  "#c2410c",
+  "#1d4ed8",
+  "#7c3aed",
+  "#be123c",
+  "#f5f5f4",
+  "#e7e5e4",
+  "#fdba74",
+  "#bbf7d0",
 ] as const;
 
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];

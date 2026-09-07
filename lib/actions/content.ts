@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "../auth";
+import { requireAdmin, requireStaff } from "../auth";
 import { slugify } from "../utils";
 
 async function save(
@@ -11,7 +11,7 @@ async function save(
   payload: Record<string, unknown>,
   path: string,
 ) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   if (id) {
     const { error } = await admin.from(table).update(payload).eq("id", id);
@@ -25,7 +25,7 @@ async function save(
 }
 
 async function remove(table: string, formData: FormData, path: string) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const { error } = await admin.from(table).delete().eq("id", String(formData.get("id") ?? ""));
   if (error) throw new Error(error.message);
   revalidatePath("/", "layout");
@@ -52,7 +52,7 @@ export async function deleteQuote(formData: FormData) {
 }
 
 export async function updateQuoteStatus(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const { error } = await admin
     .from("quote_requests")
     .update({ status: String(formData.get("status") ?? "yeni") })
@@ -191,14 +191,58 @@ export async function deleteSlide(formData: FormData) {
 
 export async function addAdminUser(formData: FormData) {
   const { admin } = await requireAdmin();
-  const { error } = await admin.from("admin_users").insert({
-    id: String(formData.get("id") ?? "").trim(),
-    email: String(formData.get("email") ?? "").trim(),
+  const username = String(formData.get("username") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const firstName = String(formData.get("first_name") ?? "").trim();
+  const lastName = String(formData.get("last_name") ?? "").trim();
+  const status = String(formData.get("status") ?? "active") === "inactive" ? "inactive" : "active";
+  const role = String(formData.get("role") ?? "editor") === "admin" ? "admin" : "editor";
+
+  if (!username || !password) {
+    throw new Error("Kullanıcı adı ve şifre zorunludur.");
+  }
+  if (password.length < 6) {
+    throw new Error("Şifre en az 6 karakter olmalı.");
+  }
+
+  const { authEmailFromUsername } = await import("../auth-email");
+  const email = authEmailFromUsername(username);
+  const { data, error: createError } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { username, first_name: firstName, last_name: lastName },
   });
-  if (error) throw new Error(error.message);
+  if (createError || !data.user) {
+    throw new Error(createError?.message || "Kullanıcı oluşturulamadı.");
+  }
+
+  const { error } = await admin.from("admin_users").insert({
+    id: data.user.id,
+    email,
+    username,
+    first_name: firstName,
+    last_name: lastName,
+    status,
+    role,
+  });
+  if (error) {
+    await admin.auth.admin.deleteUser(data.user.id);
+    throw new Error(error.message);
+  }
+
   revalidatePath("/admin/kullanicilar");
 }
 
 export async function deleteAdminUser(formData: FormData) {
-  await remove("admin_users", formData, "/admin/kullanicilar");
+  const { admin, user } = await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  if (id === user.id) {
+    throw new Error("Kendi hesabınızı silemezsiniz.");
+  }
+  const { error } = await admin.from("admin_users").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  await admin.auth.admin.deleteUser(id);
+  revalidatePath("/", "layout");
+  redirect("/admin/kullanicilar");
 }

@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "../auth";
+import { requireStaff } from "../auth";
 import { slugify } from "../utils";
 
 export async function savePost(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const title = String(formData.get("title") ?? "").trim();
   const slug = slugify(String(formData.get("slug") ?? "") || title);
@@ -37,7 +37,7 @@ export async function savePost(formData: FormData) {
 }
 
 export async function deletePost(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const { error } = await admin.from("blog_posts").delete().eq("id", id);
   if (error) throw new Error(error.message);

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { logoutAction } from "@/lib/actions/auth";
 import { Icons } from "@/components/admin/admin-icons";
+import type { UserRole } from "@/lib/types";
 
 const TOP = [
   { href: "/admin/landing", label: "Sayfa Düzeni", icon: "layers" },
@@ -33,8 +34,8 @@ const GROUPS = [
     group: "SİSTEM",
     items: [
       { href: "/admin/dosyalar", label: "Dosya Yöneticisi", icon: "folder" },
-      { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: "users" },
-      { href: "/admin/ayarlar", label: "Sistem Ayarları", icon: "gear" },
+      { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: "users", adminOnly: true },
+      { href: "/admin/ayarlar", label: "Sistem Ayarları", icon: "gear", adminOnly: true },
     ],
   },
 ] as const;
@@ -60,7 +61,7 @@ function Item({
   );
 }
 
-export function AdminSidebar() {
+export function AdminSidebar({ role = "admin" }: { role?: UserRole }) {
   return (
     <aside className="flex max-h-screen flex-col border-r border-stone-200 bg-white lg:sticky lg:top-0">
       <Link href="/admin" className="flex items-center gap-3 px-4 py-5">
@@ -79,16 +80,20 @@ export function AdminSidebar() {
             <Item key={item.href} {...item} />
           ))}
         </div>
-        {GROUPS.map((group) => (
-          <div key={group.group}>
-            <p className="px-3 pb-1.5 text-[10px] font-semibold tracking-[0.18em] text-stone-400">{group.group}</p>
-            <div className="space-y-0.5">
-              {group.items.map((item) => (
-                <Item key={item.href} {...item} />
-              ))}
+        {GROUPS.map((group) => {
+          const items = group.items.filter((item) => !("adminOnly" in item && item.adminOnly) || role === "admin");
+          if (!items.length) return null;
+          return (
+            <div key={group.group}>
+              <p className="px-3 pb-1.5 text-[10px] font-semibold tracking-[0.18em] text-stone-400">{group.group}</p>
+              <div className="space-y-0.5">
+                {items.map((item) => (
+                  <Item key={item.href} href={item.href} label={item.label} icon={item.icon} />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </nav>
 
       <form action={logoutAction} className="border-t border-stone-200 px-4 py-4">

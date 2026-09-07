@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "../auth";
-import { decodeDesignCode } from "../card-design";
+import { requireStaff } from "../auth";
+import { decodeDesignCode, normalizeCardDesign } from "../card-design";
 import { slugify } from "../utils";
 import type { CardDesign } from "../types";
 
@@ -20,11 +20,11 @@ function parseCardDesign(formData: FormData): CardDesign | null {
 
   const raw = String(formData.get("card_design") ?? "");
   if (!raw) return null;
-  return JSON.parse(raw) as CardDesign;
+  return normalizeCardDesign(JSON.parse(raw) as Partial<CardDesign>);
 }
 
 export async function saveCategory(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
   const slug = slugify(String(formData.get("slug") ?? "") || name);
@@ -55,7 +55,7 @@ export async function saveCategory(formData: FormData) {
 }
 
 export async function deleteCategory(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const { error } = await admin.from("categories").delete().eq("id", id);
   if (error) throw new Error(error.message);

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/public/product-gallery";
 import { getProductBySlug } from "@/lib/queries";
+import { parseSpecsXml } from "@/lib/specs-xml";
+import { productPriceLabel, productStockLabel } from "@/lib/product-display";
 
 export const dynamic = "force-dynamic";
 
@@ -12,8 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   return {
-    title: product?.name ?? "Ürün",
-    description: product?.description?.slice(0, 160) || undefined,
+    title: product?.meta_title || product?.name || "Ürün",
+    description: product?.meta_description || product?.description?.slice(0, 160) || undefined,
   };
 }
 
@@ -23,41 +25,93 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const category = product.categories ?? null;
+  const specs = parseSpecsXml(product.specs_xml || "");
+  const price = productPriceLabel(product);
+  const stock = productStockLabel(product);
+  const details = [product.brand, product.series, product.model].filter(Boolean);
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
-      {category ? (
-        <Link href={`/kategoriler/${category.slug}`} className="text-sm text-orange-700 hover:underline">
-          {category.name}
-        </Link>
-      ) : null}
-      <div className="mt-6 grid gap-10 lg:grid-cols-2">
-        <ProductGallery images={product.product_images ?? []} name={product.name} />
-        <div>
-          <h1 className="text-4xl font-semibold tracking-tight">{product.name}</h1>
-          <div
-            className="prose-litef mt-6 max-w-none space-y-4 text-stone-600 [&_p]:leading-7"
-            dangerouslySetInnerHTML={{ __html: product.description }}
-          />
-          {product.pdf_url ? (
-            <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-5">
-              <p className="font-medium">Teknik doküman</p>
-              <div className="mt-4 overflow-hidden rounded-xl border">
-                <iframe src={product.pdf_url} title={`${product.name} PDF`} className="h-[420px] w-full" />
+    <div>
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        {category ? (
+          <Link href={`/kategoriler/${category.slug}`} className="text-sm text-orange-700 hover:underline">
+            {category.name}
+          </Link>
+        ) : null}
+        <div className="mt-6 grid gap-10 lg:grid-cols-2">
+          <ProductGallery images={product.product_images ?? []} name={product.name} />
+          <div>
+            <h1 className="text-4xl font-semibold tracking-tight">{product.name}</h1>
+            {details.length ? <p className="mt-3 text-sm text-stone-500">{details.join(" · ")}</p> : null}
+            {price ? <p className="mt-4 text-2xl font-semibold">{price}</p> : null}
+            <p className="mt-2 text-sm text-stone-500">{stock}</p>
+            {product.description ? (
+              <div
+                className="prose-litef mt-6 max-w-none space-y-4 text-stone-600 [&_p]:leading-7"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
+            ) : null}
+            {product.pdf_url ? (
+              <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-5">
+                <p className="font-medium">Teknik belge</p>
+                <div className="mt-4 overflow-hidden rounded-xl border">
+                  <iframe src={product.pdf_url} title={`${product.name} PDF`} className="h-[420px] w-full" />
+                </div>
+                <a
+                  href={product.pdf_url}
+                  download
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex rounded-lg bg-orange-700 px-4 py-2 text-sm font-medium text-white"
+                >
+                  PDF indir
+                </a>
               </div>
-              <a
-                href={product.pdf_url}
-                download
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex rounded-lg bg-orange-700 px-4 py-2 text-sm font-medium text-white"
-              >
-                PDF indir
-              </a>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {product.about_heading || product.about_html ? (
+        <section
+          className="relative overflow-hidden py-16"
+          style={
+            product.about_image_url
+              ? { backgroundImage: `url(${product.about_image_url})`, backgroundSize: "cover", backgroundPosition: "center" }
+              : undefined
+          }
+        >
+          <div className={product.about_image_url ? "bg-stone-950/55" : ""}>
+            <div className={`mx-auto max-w-6xl px-6 ${product.about_image_url ? "text-white" : "text-stone-800"}`}>
+              {product.about_heading ? <h2 className="text-3xl font-semibold tracking-tight">{product.about_heading}</h2> : null}
+              {product.about_html ? (
+                <div
+                  className="prose-litef mt-6 max-w-3xl space-y-4 [&_p]:leading-7"
+                  dangerouslySetInnerHTML={{ __html: product.about_html }}
+                />
+              ) : null}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {specs?.length ? (
+        <section className="mx-auto max-w-6xl px-6 py-16">
+          <h2 className="text-2xl font-semibold">Teknik özellikler</h2>
+          <div className="mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white">
+            <table className="w-full text-left text-sm">
+              <tbody>
+                {specs.map((row) => (
+                  <tr key={`${row.label}-${row.value}`} className="border-t border-stone-100 first:border-t-0">
+                    <th className="w-1/3 px-4 py-3 font-medium text-stone-700">{row.label}</th>
+                    <td className="px-4 py-3 text-stone-600">{row.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
+    </div>
   );
 }

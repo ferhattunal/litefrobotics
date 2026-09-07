@@ -4,13 +4,32 @@ export type { SiteConfig };
 
 export type RenderMode = "code" | "modules";
 
+export type ImageRatio = "1/1" | "4/3" | "16/9" | "3/4" | "auto";
+
 export type CardDesign = {
   imageHeight: number;
   titleFontSize: number;
   background: string;
   shadow: string;
+  hoverShadow: string;
   radius: number;
+  borderWidth: number;
+  borderColor: string;
+  accentColor: string;
+  padding: number;
+  imageRatio: ImageRatio;
+  hoverPan: boolean;
 };
+
+export type ColorFill =
+  | { mode: "solid"; color: string }
+  | { mode: "gradient"; from: string; to: string; angle: number };
+
+export type PriceDisplay = "try" | "usd" | "both";
+
+export type UserStatus = "active" | "inactive";
+
+export type UserRole = "admin" | "editor";
 
 export type SiteSettings = {
   id: number;
@@ -76,6 +95,24 @@ export type Product = {
   description: string;
   pdf_url: string | null;
   card_design: CardDesign | null;
+  brand: string;
+  series: string;
+  model: string;
+  price_try: number | null;
+  price_usd: number | null;
+  price_display: PriceDisplay;
+  show_on_homepage: boolean;
+  show_price_on_card: boolean;
+  show_stock_badge_on_card: boolean;
+  featured: boolean;
+  stock_qty: number;
+  in_stock: boolean;
+  about_heading: string;
+  about_html: string;
+  about_image_url: string | null;
+  specs_xml: string;
+  meta_title: string;
+  meta_description: string;
   created_at: string;
   updated_at: string;
 };
@@ -87,9 +124,15 @@ export type ProductImage = {
   sort_order: number;
 };
 
+export type ProductLandingPage = {
+  product_id: string;
+  page_id: string;
+};
+
 export type ProductWithRelations = Product & {
   categories?: Category | null;
   product_images?: ProductImage[];
+  product_landing_pages?: ProductLandingPage[];
 };
 
 export type BlogPost = {
@@ -208,5 +251,10 @@ export type Slide = {
 export type AdminUser = {
   id: string;
   email: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  status: UserStatus;
+  role: UserRole;
   created_at: string;
 };

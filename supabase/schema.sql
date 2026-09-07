@@ -10,6 +10,11 @@ create extension if not exists "pgcrypto";
 create table if not exists public.admin_users (
   id uuid primary key references auth.users (id) on delete cascade,
   email text not null,
+  username text not null unique,
+  first_name text not null default '',
+  last_name text not null default '',
+  status text not null default 'active' check (status in ('active', 'inactive')),
+  role text not null default 'admin' check (role in ('admin', 'editor')),
   created_at timestamptz not null default now()
 );
 
@@ -76,6 +81,24 @@ create table if not exists public.products (
   description text not null default '',
   pdf_url text,
   card_design jsonb,
+  brand text not null default '',
+  series text not null default '',
+  model text not null default '',
+  price_try numeric,
+  price_usd numeric,
+  price_display text not null default 'try' check (price_display in ('try', 'usd', 'both')),
+  show_on_homepage boolean not null default false,
+  show_price_on_card boolean not null default true,
+  show_stock_badge_on_card boolean not null default true,
+  featured boolean not null default false,
+  stock_qty integer not null default 0,
+  in_stock boolean not null default true,
+  about_heading text not null default '',
+  about_html text not null default '',
+  about_image_url text,
+  specs_xml text not null default '',
+  meta_title text not null default '',
+  meta_description text not null default '',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -85,6 +108,12 @@ create table if not exists public.product_images (
   product_id uuid not null references public.products (id) on delete cascade,
   url text not null,
   sort_order integer not null default 0
+);
+
+create table if not exists public.product_landing_pages (
+  product_id uuid not null references public.products (id) on delete cascade,
+  page_id uuid not null references public.pages (id) on delete cascade,
+  primary key (product_id, page_id)
 );
 
 create table if not exists public.blog_posts (
@@ -210,6 +239,7 @@ alter table public.site_settings enable row level security;
 alter table public.categories enable row level security;
 alter table public.products enable row level security;
 alter table public.product_images enable row level security;
+alter table public.product_landing_pages enable row level security;
 alter table public.blog_posts enable row level security;
 alter table public.about_page enable row level security;
 alter table public.contact_page enable row level security;
@@ -259,6 +289,9 @@ create policy "products_public_read" on public.products for select using (true);
 drop policy if exists "product_images_public_read" on public.product_images;
 create policy "product_images_public_read" on public.product_images for select using (true);
 
+drop policy if exists "product_landing_pages_public_read" on public.product_landing_pages;
+create policy "product_landing_pages_public_read" on public.product_landing_pages for select using (true);
+
 drop policy if exists "blog_posts_public_read" on public.blog_posts;
 create policy "blog_posts_public_read"
 on public.blog_posts for select
@@ -282,7 +315,9 @@ values
   ('product-pdfs', 'product-pdfs', true, 26214400),
   ('category-heroes', 'category-heroes', true, 10485760),
   ('blog-images', 'blog-images', true, 10485760),
-  ('page-assets', 'page-assets', true, 10485760)
+  ('page-assets', 'page-assets', true, 10485760),
+  ('media', 'media', true, 20971520),
+  ('documents', 'documents', true, 52428800)
 on conflict (id) do nothing;
 
 drop policy if exists "storage_public_read" on storage.objects;
@@ -294,7 +329,9 @@ using (
     'product-pdfs',
     'category-heroes',
     'blog-images',
-    'page-assets'
+    'page-assets',
+    'media',
+    'documents'
   )
 );
 
@@ -533,5 +570,5 @@ for each row execute function public.set_updated_at();
 -- 2) Kullanıcının UUID değerini kopyalayın.
 -- 3) Aşağıdaki satırların yorumunu kaldırıp değerleri doldurun:
 --
--- insert into public.admin_users (id, email)
--- values ('00000000-0000-0000-0000-000000000000', 'admin@ornek.com');
+-- insert into public.admin_users (id, email, username, role, status)
+-- values ('00000000-0000-0000-0000-000000000000', 'admin@ornek.com', 'admin', 'admin', 'active');

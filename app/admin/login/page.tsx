@@ -13,8 +13,8 @@ export default async function AdminLoginPage({
         <p className="text-xs tracking-[0.2em] text-orange-700 uppercase">Litef Robotics</p>
         <h1 className="mt-2 text-2xl font-semibold">Admin girişi</h1>
         <label className="mt-6 block">
-          <span className="admin-label">E-posta</span>
-          <input className="admin-input" type="email" name="email" required />
+          <span className="admin-label">Kullanıcı adı</span>
+          <input className="admin-input" name="username" required autoComplete="username" />
         </label>
         <label className="mt-4 block">
           <span className="admin-label">Şifre</span>

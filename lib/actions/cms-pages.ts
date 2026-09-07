@@ -1,11 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "../auth";
+import { requireStaff } from "../auth";
 import { extractMapsEmbedUrl } from "../utils";
 
 export async function saveAboutPage(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const { error } = await admin
     .from("about_page")
     .update({
@@ -21,7 +21,7 @@ export async function saveAboutPage(formData: FormData) {
 }
 
 export async function saveContactPage(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const { error } = await admin
     .from("contact_page")
     .update({

@@ -220,6 +220,23 @@ select {
   animation: save-check-draw 0.45s 0.12s ease forwards;
 }
 
+.lf-product-card {
+  --card-hover-shadow: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.lf-product-card:hover {
+  box-shadow: var(--card-hover-shadow);
+}
+
+.lf-product-card-pan img {
+  transition: transform 0.45s ease;
+}
+
+.lf-product-card-pan:hover img {
+  transform: scale(1.08) translateX(6px);
+}
+
 @keyframes save-ring {
   0% {
     transform: scale(0.4);

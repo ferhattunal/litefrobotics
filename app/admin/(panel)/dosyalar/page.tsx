@@ -1,14 +1,14 @@
 import { FileManager } from "@/components/admin/file-manager";
-import { listStorageFiles } from "@/lib/queries-content";
 
-export default async function FilesAdminPage() {
-  const files = await listStorageFiles();
+export default function FilesAdminPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold">Dosya Yöneticisi</h1>
-      <FileManager
-        files={files.map((file) => ({ name: file.name, created_at: file.created_at ?? undefined }))}
-      />
+      <p className="mb-6 text-sm text-stone-500">
+        Görseller <code>media</code>, PDF ve dökümanlar <code>documents</code> bucket&apos;ında tutulur. Klasörlerin içine
+        klasör açabilir, her öğenin public linkini kopyalayabilirsiniz.
+      </p>
+      <FileManager />
     </div>
   );
 }

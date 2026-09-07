@@ -135,7 +135,7 @@ export async function getProducts() {
     const supabase = db();
     const { data } = await supabase
       .from("products")
-      .select("*, categories(*), product_images(*)")
+      .select("*, categories(*), product_images(*), product_landing_pages(*)")
       .order("created_at", { ascending: false });
     return (data ?? []) as ProductWithRelations[];
   });
@@ -146,7 +146,7 @@ export async function getProductBySlug(slug: string) {
     const supabase = db();
     const { data } = await supabase
       .from("products")
-      .select("*, categories(*), product_images(*)")
+      .select("*, categories(*), product_images(*), product_landing_pages(*)")
       .eq("slug", slug)
       .maybeSingle();
     return data as ProductWithRelations | null;
@@ -158,10 +158,39 @@ export async function getProduct(id: string) {
     const supabase = db();
     const { data } = await supabase
       .from("products")
-      .select("*, categories(*), product_images(*)")
+      .select("*, categories(*), product_images(*), product_landing_pages(*)")
       .eq("id", id)
       .maybeSingle();
     return data as ProductWithRelations | null;
+  });
+}
+
+export async function getShowcaseProducts() {
+  return run<ProductWithRelations[]>([], async () => {
+    const supabase = db();
+    const { data } = await supabase
+      .from("products")
+      .select("*, categories(*), product_images(*)")
+      .eq("show_on_homepage", true)
+      .order("featured", { ascending: false })
+      .order("name");
+    return (data ?? []) as ProductWithRelations[];
+  });
+}
+
+export async function getProductsForLandingPage(pageId: string) {
+  return run<ProductWithRelations[]>([], async () => {
+    const supabase = db();
+    const { data } = await supabase
+      .from("product_landing_pages")
+      .select("products(*, categories(*), product_images(*))")
+      .eq("page_id", pageId);
+    const rows = (data ?? []) as { products?: ProductWithRelations | ProductWithRelations[] | null }[];
+    return rows.flatMap((row) => {
+      const product = row.products;
+      if (!product) return [];
+      return Array.isArray(product) ? product : [product];
+    });
   });
 }
 

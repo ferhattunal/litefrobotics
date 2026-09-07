@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { PageRenderer } from "@/components/public/page-renderer";
+import { ProductShowcase } from "@/components/public/product-showcase";
 import { RESERVED_SLUGS } from "@/lib/constants";
-import { getPageBySlug, getPageModules } from "@/lib/queries";
+import { getPageBySlug, getPageModules, getProductsForLandingPage } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,12 @@ export default async function LandingSlugPage({ params }: Props) {
 
   const assigned = page.render_mode === "modules" ? await getPageModules(page.id) : [];
   const modules = assigned.map((item) => item.modules).filter(Boolean);
+  const products = await getProductsForLandingPage(page.id);
 
-  return <PageRenderer page={page} modules={modules} />;
+  return (
+    <>
+      <PageRenderer page={page} modules={modules} />
+      <ProductShowcase title="Ürünler" products={products} />
+    </>
+  );
 }

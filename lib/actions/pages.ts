@@ -2,12 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "../auth";
+import { requireStaff } from "../auth";
 import { isReservedSlug, slugify } from "../utils";
 import type { RenderMode } from "../types";
 
 export async function savePage(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const title = String(formData.get("title") ?? "").trim();
   const slugRaw = String(formData.get("slug") ?? "").trim() || slugify(title);
@@ -69,7 +69,7 @@ export async function savePage(formData: FormData) {
 }
 
 export async function deletePage(formData: FormData) {
-  const { admin } = await requireAdmin();
+  const { admin } = await requireStaff();
   const id = String(formData.get("id") ?? "");
   const { error } = await admin.from("pages").delete().eq("id", id);
   if (error) throw new Error(error.message);

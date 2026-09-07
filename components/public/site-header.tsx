@@ -22,11 +22,11 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
   }, [js]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200/70 bg-white/90 backdrop-blur">
+    <header className="lf-site-header sticky top-0 z-40">
       <style>{css}</style>
       <div className="hidden md:block" dangerouslySetInnerHTML={{ __html: html }} />
 
-      <div className="flex h-14 items-center justify-between px-4 md:hidden">
+      <div className="lf-mobile-bar flex h-14 items-center justify-between px-4 md:hidden">
         <a href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
