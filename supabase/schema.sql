@@ -99,6 +99,7 @@ create table if not exists public.products (
   specs_xml text not null default '',
   meta_title text not null default '',
   meta_description text not null default '',
+  sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

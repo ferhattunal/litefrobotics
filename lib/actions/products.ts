@@ -48,7 +48,7 @@ export async function saveProduct(formData: FormData) {
   const displayRaw = String(formData.get("price_display") ?? "try");
   const priceDisplay: PriceDisplay = displayRaw === "usd" || displayRaw === "both" ? displayRaw : "try";
 
-  const payload = {
+  const payload: Record<string, unknown> = {
     name,
     slug,
     category_id: categoryId,
@@ -74,6 +74,14 @@ export async function saveProduct(formData: FormData) {
     meta_title: String(formData.get("meta_title") ?? "").trim(),
     meta_description: String(formData.get("meta_description") ?? "").trim(),
   };
+
+  if (!id) {
+    const { data: last } = await admin
+      .from("products")
+      .select("id")
+      .eq("category_id", categoryId);
+    payload.sort_order = (last?.length ?? 0) + 1;
+  }
 
   let productId = id;
 
@@ -116,6 +124,35 @@ export async function saveProduct(formData: FormData) {
 
   revalidatePath("/", "layout");
   redirect("/admin/urunler");
+}
+
+export async function moveProduct(formData: FormData) {
+  const { admin } = await requireStaff();
+  const id = String(formData.get("id") ?? "");
+  const direction = String(formData.get("direction") ?? "") === "1" ? 1 : -1;
+  const { data: current } = await admin
+    .from("products")
+    .select("id, category_id, sort_order")
+    .eq("id", id)
+    .maybeSingle();
+  if (!current) return;
+
+  const { data: siblings } = await admin
+    .from("products")
+    .select("id, sort_order")
+    .eq("category_id", current.category_id)
+    .order("sort_order")
+    .order("name");
+  const list = siblings ?? [];
+  const index = list.findIndex((row) => row.id === id);
+  const swap = list[index + direction];
+  if (index < 0 || !swap) return;
+
+  const currentOrder = current.sort_order ?? index;
+  const swapOrder = swap.sort_order ?? index + direction;
+  await admin.from("products").update({ sort_order: swapOrder }).eq("id", id);
+  await admin.from("products").update({ sort_order: currentOrder }).eq("id", swap.id);
+  revalidatePath("/admin/urunler");
 }
 
 export async function deleteProduct(formData: FormData) {

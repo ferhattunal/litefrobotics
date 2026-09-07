@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { ImageDropzone } from "@/components/admin/image-dropzone";
 import { UrlPasteField } from "@/components/admin/url-paste-field";
 
 type Props = {
@@ -12,8 +13,7 @@ export function MultiImageUploader({ values, onChange }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
+  async function uploadFiles(files: File[]) {
     if (!files.length) return;
     setBusy(true);
     setError("");
@@ -34,7 +34,6 @@ export function MultiImageUploader({ values, onChange }: Props) {
     }
     onChange([...values, ...uploaded]);
     setBusy(false);
-    event.target.value = "";
   }
 
   function move(index: number, direction: -1 | 1) {
@@ -46,14 +45,18 @@ export function MultiImageUploader({ values, onChange }: Props) {
   }
 
   return (
-    <div className="grid gap-3">
-      <label className="admin-label">Ürün görselleri (WebP olarak kaydedilir)</label>
-      <input type="file" accept="image/*" multiple onChange={handleChange} disabled={busy} />
+    <div className="grid gap-4">
+      <ImageDropzone
+        label="Görsel yükle"
+        hint="Bir veya birden fazla görsel seçin ya da sürükleyin. İlk görsel ana görseldir."
+        multiple
+        busy={busy}
+        onFiles={uploadFiles}
+      />
       <UrlPasteField
-        label="Görsel URL yapıştır"
+        label="veya görsel URL yapıştır"
         onApply={(url) => onChange([...values, url])}
       />
-      {busy ? <p className="text-sm text-stone-500">Dönüştürülüp yükleniyor…</p> : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <div className="grid gap-3 sm:grid-cols-3">
         {values.map((url, index) => (
@@ -61,6 +64,7 @@ export function MultiImageUploader({ values, onChange }: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" className="h-32 w-full object-cover" />
             <div className="flex gap-2 p-2 text-xs">
+              {index === 0 ? <span className="rounded bg-stone-900 px-2 py-1 text-white">Ana</span> : null}
               <button type="button" onClick={() => move(index, -1)} className="rounded border px-2 py-1">
                 Yukarı
               </button>

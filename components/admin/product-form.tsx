@@ -17,12 +17,15 @@ type Props = {
   product?: ProductWithRelations;
   categories: Category[];
   pages: PageRecord[];
+  defaultCategoryId?: string;
 };
 
-export function ProductForm({ product, categories, pages }: Props) {
+export function ProductForm({ product, categories, pages, defaultCategoryId }: Props) {
   const [name, setName] = useState(product?.name ?? "");
   const [slug, setSlug] = useState(product?.slug ?? "");
-  const [categoryId, setCategoryId] = useState(product?.category_id ?? categories[0]?.id ?? "");
+  const [categoryId, setCategoryId] = useState(
+    product?.category_id ?? defaultCategoryId ?? categories[0]?.id ?? "",
+  );
   const [images, setImages] = useState(
     (product?.product_images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((image) => image.url),
   );
@@ -164,8 +167,8 @@ export function ProductForm({ product, categories, pages }: Props) {
 
       <section className="grid gap-4 rounded-2xl bg-white p-5">
         <h2 className="text-lg font-semibold">Ürün görselleri</h2>
+        <p className="text-sm text-stone-500">Doğrudan dosya yükleyin veya dosya yöneticisinden kopyaladığınız linki yapıştırın. İlk görsel ana görseldir.</p>
         <MultiImageUploader values={images} onChange={setImages} />
-        <p className="text-xs text-stone-500">İlk görsel ana görseldir. Ek görseller ekleyebilir, dosya yöneticisinden kopyalanan linki yapıştırabilirsiniz.</p>
       </section>
 
       <section className="grid gap-4 rounded-2xl bg-white p-5">
@@ -178,8 +181,8 @@ export function ProductForm({ product, categories, pages }: Props) {
           <span className="admin-label">Hakkında metni</span>
           <textarea className="admin-textarea min-h-32" name="about_html" defaultValue={product?.about_html ?? ""} />
         </label>
-        <FileUploader bucket="media" folder="products/about" accept="image/*" label="Hakkında görseli" value={aboutImage} onChange={setAboutImage} />
-        <UrlPasteField label="Görsel URL yapıştır" onApply={setAboutImage} />
+        <FileUploader bucket="product-images" folder="about" accept="image/*" label="Hakkında görseli yükle" value={aboutImage} onChange={setAboutImage} />
+        <UrlPasteField label="veya görsel URL yapıştır" onApply={setAboutImage} />
       </section>
 
       <section className="grid gap-4 rounded-2xl bg-white p-5">

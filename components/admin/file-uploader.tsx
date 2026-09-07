@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { ImageDropzone } from "@/components/admin/image-dropzone";
 import type { StorageBucket } from "@/lib/constants";
 
 type Props = {
@@ -22,10 +23,9 @@ export function FileUploader({
 }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const isImage = accept.includes("image");
 
-  async function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  async function upload(file: File) {
     setBusy(true);
     setError("");
     const body = new FormData();
@@ -44,8 +44,31 @@ export function FileUploader({
 
   return (
     <div className="grid gap-2">
-      <label className="admin-label">{label}</label>
-      <input type="file" accept={accept} onChange={handleChange} disabled={busy} />
+      {isImage ? (
+        <ImageDropzone
+          label={label}
+          busy={busy}
+          accept={accept}
+          onFiles={(files) => {
+            const file = files[0];
+            if (file) void upload(file);
+          }}
+        />
+      ) : (
+        <label>
+          <span className="admin-label">{label}</span>
+          <input
+            type="file"
+            accept={accept}
+            disabled={busy}
+            className="mt-1 block w-full text-sm"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              const file = event.target.files?.[0];
+              if (file) void upload(file);
+            }}
+          />
+        </label>
+      )}
       {busy ? <p className="text-sm text-stone-500">Yükleniyor…</p> : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {value ? (

@@ -136,7 +136,7 @@ export async function getProducts() {
     const { data } = await supabase
       .from("products")
       .select("*, categories(*), product_images(*), product_landing_pages(*)")
-      .order("created_at", { ascending: false });
+      .order("name");
     return (data ?? []) as ProductWithRelations[];
   });
 }

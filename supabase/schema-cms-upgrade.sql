@@ -58,7 +58,8 @@ alter table public.products
   add column if not exists about_image_url text,
   add column if not exists specs_xml text not null default '',
   add column if not exists meta_title text not null default '',
-  add column if not exists meta_description text not null default '';
+  add column if not exists meta_description text not null default '',
+  add column if not exists sort_order integer not null default 0;
 
 do $$
 begin

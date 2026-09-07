@@ -113,6 +113,7 @@ export type Product = {
   specs_xml: string;
   meta_title: string;
   meta_description: string;
+  sort_order: number;
   created_at: string;
   updated_at: string;
 };
