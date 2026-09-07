@@ -16,7 +16,7 @@ export default async function CategoriesPage() {
     <section className="mx-auto max-w-6xl px-6 py-16">
       <h1 className="text-4xl font-semibold tracking-tight">Ürün kategorileri</h1>
       <p className="mt-3 max-w-2xl text-stone-600">İhtiyacınıza uygun ürün grubunu seçin.</p>
-      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
           <Link
             key={category.id}

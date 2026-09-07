@@ -44,7 +44,7 @@ export default async function CategoryDetailPage({ params }: Props) {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-14">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} category={category} />
           ))}

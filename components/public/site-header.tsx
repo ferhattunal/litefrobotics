@@ -35,11 +35,11 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
       <style>{css}</style>
       <div className="hidden md:block" dangerouslySetInnerHTML={{ __html: html }} />
 
-      <div className="lf-mobile-bar flex h-16 items-center justify-between gap-3 px-4 md:hidden">
-        <a href="/" className="min-w-0 inline-flex items-center">
+      <div className="lf-mobile-bar flex h-14 items-center justify-between gap-3 px-4 md:hidden">
+        <a href="/" className="inline-flex min-w-0 items-center">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt={brandName} className="h-10 w-auto max-w-[58vw] object-contain" />
+            <img src={logoUrl} alt={brandName} className="h-8 w-auto max-w-[140px] object-contain" />
           ) : (
             <span className="truncate text-sm font-semibold tracking-wide uppercase">{brandName}</span>
           )}
@@ -60,7 +60,9 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
         </button>
       </div>
 
-      <div className={`fixed inset-0 z-50 md:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`}>
+      <div
+        className={`fixed inset-0 z-50 overflow-hidden md:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`}
+      >
         <button
           type="button"
           aria-label="Menüyü kapat"
@@ -68,7 +70,7 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
           onClick={() => setOpen(false)}
         />
         <div
-          className={`absolute inset-y-0 right-0 flex w-[min(100%,320px)] flex-col bg-white shadow-xl transition-transform duration-[280ms] ease-out ${
+          className={`absolute inset-y-0 right-0 flex w-[min(100%,320px)] max-w-full flex-col overflow-hidden bg-white shadow-xl transition-transform duration-[280ms] ease-out ${
             open ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -82,7 +84,7 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
               ×
             </button>
           </div>
-          <div className="lf-mobile-menu overflow-y-auto px-6 text-stone-800 [&_a]:block [&_a]:py-3 [&_a]:text-lg [&_a]:text-stone-800 [&_.lf-actions]:mt-4 [&_.lf-links]:flex [&_.lf-links]:flex-col [&_.lf-logo]:mb-4 [&_.lf-nav]:flex [&_.lf-nav]:flex-col [&_.lf-nav]:items-start">
+          <div className="lf-mobile-menu overflow-x-hidden overflow-y-auto px-6 text-stone-800 [&_a]:block [&_a]:py-3 [&_a]:text-lg [&_a]:text-stone-800 [&_.lf-actions]:mt-4 [&_.lf-links]:flex [&_.lf-links]:flex-col [&_.lf-logo]:mb-4 [&_.lf-nav]:flex [&_.lf-nav]:flex-col [&_.lf-nav]:items-start">
             <div dangerouslySetInnerHTML={{ __html: html }} />
           </div>
         </div>

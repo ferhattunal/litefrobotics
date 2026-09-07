@@ -178,7 +178,7 @@ export function CardDesignEditor({ value, fallback, onChange, resetLabel, allowC
           <div className="lf-product-card-image relative overflow-hidden bg-[#eef1f4]" style={imageRatioStyle(active)}>
             {preview?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={preview.image} alt="" className="h-full w-full object-contain p-3" />
+              <img src={preview.image} alt="" />
             ) : null}
             <div className="absolute top-2 right-2 flex flex-col items-end gap-1.5">
               {preview?.stock ? (
@@ -199,7 +199,7 @@ export function CardDesignEditor({ value, fallback, onChange, resetLabel, allowC
               Kategori
             </p>
             <p className="mt-1 text-[11px] text-stone-500">MARKA · SERİ</p>
-            <div className="mt-1 font-semibold" style={{ fontSize: active.titleFontSize }}>
+            <div className="mt-1 font-semibold" style={{ fontSize: `${active.titleFontSize}px` }}>
               {preview?.name || "Örnek ürün"}
             </div>
             <div className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full py-2 text-[10px] font-semibold tracking-[0.12em] text-white uppercase" style={{ background: "var(--lf-625)" }}>

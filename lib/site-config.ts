@@ -297,14 +297,11 @@ export function generateNavbarCss(config: SiteConfig) {
   const bg = colorFillCss(config.navbarFill);
   const fg = config.navbarTextColor || contrastOn(config.navbarFill);
   return `.lf-site-header { background: ${bg}; color: ${fg}; border-bottom: 1px solid color-mix(in srgb, ${fg} 12%, transparent); }
-.lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1120px; margin: 0 auto; padding: 16px 20px; font-family: "MiSans Latin", system-ui, sans-serif; background: transparent; color: ${fg}; }
-.lf-logo { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${fg}; text-decoration: none; display: inline-flex; align-items: center; }
-.lf-logo img { display: block; height: 48px; width: auto; max-width: min(220px, 42vw); object-fit: contain; }
-@media (max-width: 767px) {
-  .lf-logo img { height: 40px; }
-}
-.lf-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-.lf-links a { color: ${fg}; text-decoration: none; font-size: 14px; font-weight: 500; position: relative; opacity: 0.88; }
+.lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1120px; width: 100%; margin: 0 auto; padding: 12px 20px; font-family: "MiSans Latin", system-ui, sans-serif; background: transparent; color: ${fg}; flex-wrap: nowrap; }
+.lf-logo { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${fg}; text-decoration: none; display: inline-flex; align-items: center; flex-shrink: 0; }
+.lf-logo img { display: block; height: 40px; width: auto; max-width: 140px; object-fit: contain; }
+.lf-links { display: flex; align-items: center; gap: 18px; flex-wrap: nowrap; min-width: 0; }
+.lf-links a { color: ${fg}; text-decoration: none; font-size: 14px; font-weight: 500; position: relative; opacity: 0.88; white-space: nowrap; }
 .lf-actions { display: flex; align-items: center; gap: 8px; }
 .lf-search, .lf-action { border: 1px solid color-mix(in srgb, ${fg} 28%, transparent); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: ${fg}; text-decoration: none; }
 .lf-hover-underline .lf-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: ${fg}; transform: scaleX(0); transition: transform .2s; }
@@ -313,6 +310,9 @@ export function generateNavbarCss(config: SiteConfig) {
 .lf-hover-background .lf-links a { padding: 6px 8px; border-radius: 8px; }
 .lf-hover-background .lf-links a:hover { background: color-mix(in srgb, ${fg} 12%, transparent); opacity: 1; }
 .lf-mobile-bar { color: ${fg}; }
+.lf-mobile-menu .lf-nav { max-width: 100%; flex-direction: column; align-items: flex-start; gap: 8px; padding: 0; }
+.lf-mobile-menu .lf-links { flex-direction: column; align-items: flex-start; gap: 0; width: 100%; }
+.lf-mobile-menu .lf-logo img { height: 36px; max-width: 160px; }
 ${config.navbarCss}`;
 }
 
