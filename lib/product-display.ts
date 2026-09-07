@@ -24,3 +24,8 @@ export function productStockLabel(product: Pick<Product, "in_stock" | "stock_qty
   if (!product.in_stock || product.stock_qty <= 0) return "Stokta yok";
   return `Stokta ${product.stock_qty}`;
 }
+
+export function productStockBadge(product: Pick<Product, "in_stock" | "stock_qty">) {
+  if (!product.in_stock || product.stock_qty <= 0) return "Stokta yok";
+  return "✓ Stokta · Hemen Teslim";
+}

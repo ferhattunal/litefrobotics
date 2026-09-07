@@ -175,23 +175,36 @@ export function CardDesignEditor({ value, fallback, onChange, resetLabel, allowC
             ["--card-hover-shadow" as string]: active.hoverShadow,
           }}
         >
-          <div className="lf-product-card-image relative overflow-hidden bg-stone-200" style={imageRatioStyle(active)}>
+          <div className="lf-product-card-image relative overflow-hidden bg-[#eef1f4]" style={imageRatioStyle(active)}>
             {preview?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={preview.image} alt="" className="h-full w-full object-cover" />
+              <img src={preview.image} alt="" className="h-full w-full object-contain p-3" />
             ) : null}
-            {preview?.featured ? (
-              <span className="absolute top-2 left-2 rounded-full px-2 py-0.5 text-[10px] font-semibold text-white" style={{ background: active.accentColor }}>
-                Öne çıkan
-              </span>
-            ) : null}
+            <div className="absolute top-2 right-2 flex flex-col items-end gap-1.5">
+              {preview?.stock ? (
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold text-white"
+                  style={{ background: preview.stock.includes("yok") ? "#78716c" : "var(--lf-625)" }}
+                >
+                  {preview.stock}
+                </span>
+              ) : null}
+              {preview?.price ? (
+                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold shadow-sm">{preview.price}</span>
+              ) : null}
+            </div>
           </div>
           <div style={{ padding: active.padding }}>
-            <div className="font-semibold" style={{ fontSize: active.titleFontSize }}>
+            <p className="text-[10px] font-semibold tracking-[0.14em] uppercase" style={{ color: "var(--lf-625)" }}>
+              Kategori
+            </p>
+            <p className="mt-1 text-[11px] text-stone-500">MARKA · SERİ</p>
+            <div className="mt-1 font-semibold" style={{ fontSize: active.titleFontSize }}>
               {preview?.name || "Örnek ürün"}
             </div>
-            {preview?.price ? <p className="mt-1 text-sm font-medium" style={{ color: active.accentColor }}>{preview.price}</p> : null}
-            {preview?.stock ? <p className="mt-1 text-xs text-stone-500">{preview.stock}</p> : null}
+            <div className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full py-2 text-[10px] font-semibold tracking-[0.12em] text-white uppercase" style={{ background: "var(--lf-625)" }}>
+              Ürünü incele
+            </div>
           </div>
         </div>
       </div>

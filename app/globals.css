@@ -34,9 +34,11 @@
 
 :root {
   color-scheme: light;
-  --background: #f4f4f1;
+  --background: #f3f0e8;
   --foreground: #111827;
   --accent: #c2410c;
+  --lf-625: #5e7a70;
+  --lf-625-soft: #e7eee9;
 }
 
 @theme inline {

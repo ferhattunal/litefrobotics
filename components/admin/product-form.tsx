@@ -8,7 +8,7 @@ import { MultiImageUploader } from "@/components/admin/multi-image-uploader";
 import { UrlPasteField } from "@/components/admin/url-paste-field";
 import { saveProduct } from "@/lib/actions/products";
 import { DEFAULT_CARD, resolveCardDesign } from "@/lib/card-design";
-import { productPriceLabel, productStockLabel } from "@/lib/product-display";
+import { productPriceLabel, productStockBadge } from "@/lib/product-display";
 import { parseSpecsXml } from "@/lib/specs-xml";
 import { slugify } from "@/lib/utils";
 import type { CardDesign, Category, PageRecord, PriceDisplay, ProductWithRelations } from "@/lib/types";
@@ -56,7 +56,7 @@ export function ProductForm({ product, categories, pages, defaultCategoryId }: P
     price_usd: priceUsd ? Number(priceUsd) : null,
     price_display: priceDisplay,
   });
-  const previewStock = productStockLabel({ in_stock: inStock, stock_qty: Number(stockQty) || 0 });
+  const previewStock = productStockBadge({ in_stock: inStock, stock_qty: Number(stockQty) || 0 });
 
   function toggleLanding(id: string) {
     setLandingIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));

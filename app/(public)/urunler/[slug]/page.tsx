@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/public/product-gallery";
+import { SpecsTable } from "@/components/public/specs-table";
 import { getProductBySlug } from "@/lib/queries";
 import { parseSpecsXml } from "@/lib/specs-xml";
 import { productPriceLabel, productStockLabel } from "@/lib/product-display";
@@ -32,16 +33,16 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div>
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
         {category ? (
-          <Link href={`/kategoriler/${category.slug}`} className="text-sm text-orange-700 hover:underline">
+          <Link href={`/kategoriler/${category.slug}`} className="text-sm font-medium hover:underline" style={{ color: "var(--lf-625)" }}>
             {category.name}
           </Link>
         ) : null}
         <div className="mt-6 grid gap-10 lg:grid-cols-2">
           <ProductGallery images={product.product_images ?? []} name={product.name} />
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight">{product.name}</h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{product.name}</h1>
             {details.length ? <p className="mt-3 text-sm text-stone-500">{details.join(" · ")}</p> : null}
             {price ? <p className="mt-4 text-2xl font-semibold">{price}</p> : null}
             <p className="mt-2 text-sm text-stone-500">{stock}</p>
@@ -52,21 +53,15 @@ export default async function ProductPage({ params }: Props) {
               />
             ) : null}
             {product.pdf_url ? (
-              <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-5">
-                <p className="font-medium">Teknik belge</p>
-                <div className="mt-4 overflow-hidden rounded-xl border">
-                  <iframe src={product.pdf_url} title={`${product.name} PDF`} className="h-[420px] w-full" />
-                </div>
-                <a
-                  href={product.pdf_url}
-                  download
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex rounded-lg bg-orange-700 px-4 py-2 text-sm font-medium text-white"
-                >
-                  PDF indir
-                </a>
-              </div>
+              <a
+                href={product.pdf_url}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex w-full items-center justify-center rounded-full px-6 py-3 text-sm font-semibold tracking-wide text-white sm:w-auto"
+                style={{ background: "var(--lf-625)" }}
+              >
+                Teknik döküman
+              </a>
             ) : null}
           </div>
         </div>
@@ -82,7 +77,7 @@ export default async function ProductPage({ params }: Props) {
           }
         >
           <div className={product.about_image_url ? "bg-stone-950/55" : ""}>
-            <div className={`mx-auto max-w-6xl px-6 ${product.about_image_url ? "text-white" : "text-stone-800"}`}>
+            <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${product.about_image_url ? "text-white" : "text-stone-800"}`}>
               {product.about_heading ? <h2 className="text-3xl font-semibold tracking-tight">{product.about_heading}</h2> : null}
               {product.about_html ? (
                 <div
@@ -95,23 +90,7 @@ export default async function ProductPage({ params }: Props) {
         </section>
       ) : null}
 
-      {specs?.length ? (
-        <section className="mx-auto max-w-6xl px-6 py-16">
-          <h2 className="text-2xl font-semibold">Teknik özellikler</h2>
-          <div className="mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white">
-            <table className="w-full text-left text-sm">
-              <tbody>
-                {specs.map((row) => (
-                  <tr key={`${row.label}-${row.value}`} className="border-t border-stone-100 first:border-t-0">
-                    <th className="w-1/3 px-4 py-3 font-medium text-stone-700">{row.label}</th>
-                    <td className="px-4 py-3 text-stone-600">{row.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      ) : null}
+      {specs?.length ? <SpecsTable rows={specs} /> : null}
     </div>
   );
 }

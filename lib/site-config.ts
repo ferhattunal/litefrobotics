@@ -299,7 +299,10 @@ export function generateNavbarCss(config: SiteConfig) {
   return `.lf-site-header { background: ${bg}; color: ${fg}; border-bottom: 1px solid color-mix(in srgb, ${fg} 12%, transparent); }
 .lf-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1120px; margin: 0 auto; padding: 16px 20px; font-family: "MiSans Latin", system-ui, sans-serif; background: transparent; color: ${fg}; }
 .lf-logo { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${fg}; text-decoration: none; display: inline-flex; align-items: center; }
-.lf-logo img { display: block; height: 36px; width: auto; }
+.lf-logo img { display: block; height: 48px; width: auto; max-width: min(220px, 42vw); object-fit: contain; }
+@media (max-width: 767px) {
+  .lf-logo img { height: 40px; }
+}
 .lf-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .lf-links a { color: ${fg}; text-decoration: none; font-size: 14px; font-weight: 500; position: relative; opacity: 0.88; }
 .lf-actions { display: flex; align-items: center; gap: 8px; }
