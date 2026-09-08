@@ -111,3 +111,26 @@ using (
 alter table public.modules
   add column if not exists module_type text not null default 'custom';
 
+-- Krem/bej CMS zeminlerini kirli beyaza çek
+update public.pages
+set css = replace(replace(replace(replace(replace(replace(
+  css,
+  '#f3f0e8', '#f0f0f0'),
+  '#F3F0E8', '#f0f0f0'),
+  '#f4f4f1', '#f0f0f0'),
+  '#F4F4F1', '#f0f0f0'),
+  '#faf6ee', '#f0f0f0'),
+  '#f5f0e6', '#f0f0f0')
+where css ~* '#(f3f0e8|f4f4f1|faf6ee|f5f0e6)';
+
+update public.modules
+set css = replace(replace(replace(replace(replace(replace(
+  css,
+  '#f3f0e8', '#f0f0f0'),
+  '#F3F0E8', '#f0f0f0'),
+  '#f4f4f1', '#f0f0f0'),
+  '#F4F4F1', '#f0f0f0'),
+  '#faf6ee', '#f0f0f0'),
+  '#f5f0e6', '#f0f0f0')
+where css ~* '#(f3f0e8|f4f4f1|faf6ee|f5f0e6)';
+

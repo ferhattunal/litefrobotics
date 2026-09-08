@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { SHADOW_PRESETS } from "./constants";
+import { coolOffWhite } from "./css-theme";
 import type { CardDesign, Category, ImageRatio, Product } from "./types";
 
 export const DEFAULT_CARD: CardDesign = {
@@ -30,7 +31,7 @@ export function normalizeCardDesign(partial?: Partial<CardDesign> | null): CardD
   return {
     imageHeight: typeof partial.imageHeight === "number" ? partial.imageHeight : DEFAULT_CARD.imageHeight,
     titleFontSize: typeof partial.titleFontSize === "number" ? partial.titleFontSize : DEFAULT_CARD.titleFontSize,
-    background: typeof partial.background === "string" ? partial.background : DEFAULT_CARD.background,
+    background: typeof partial.background === "string" ? coolOffWhite(partial.background) : DEFAULT_CARD.background,
     shadow: typeof partial.shadow === "string" ? partial.shadow : DEFAULT_CARD.shadow,
     hoverShadow: typeof partial.hoverShadow === "string" ? partial.hoverShadow : DEFAULT_CARD.hoverShadow,
     radius: typeof partial.radius === "number" ? partial.radius : DEFAULT_CARD.radius,

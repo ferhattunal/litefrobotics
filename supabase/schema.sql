@@ -405,7 +405,7 @@ select
 .hero h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.1; margin: 0 0 16px; max-width: 16ch; }
 .lead { max-width: 52ch; color: #d1d5db; font-size: 18px; }
 .btn { display: inline-block; margin-top: 28px; background: #c2410c; color: white; padding: 12px 22px; text-decoration: none; border-radius: 999px; font-weight: 600; }
-.features { max-width: 1120px; margin: 0 auto; padding: 64px 20px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.features { max-width: 1120px; margin: 0 auto; padding: 64px 20px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); background: var(--background, #f0f0f0); }
 .features article { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 8px 24px rgba(15,23,42,0.06); }
 .features h2 { margin: 0 0 8px; font-size: 20px; }
 .features p { margin: 0; color: #64748b; }$css$,

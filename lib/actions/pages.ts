@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireStaff } from "../auth";
+import { rewriteWarmCss } from "../css-theme";
 import { isReservedSlug, slugify } from "../utils";
 import type { RenderMode } from "../types";
 
@@ -30,7 +31,7 @@ export async function savePage(formData: FormData) {
     is_homepage: isHomepage,
     render_mode: renderMode,
     html: String(formData.get("html") ?? ""),
-    css: String(formData.get("css") ?? ""),
+    css: rewriteWarmCss(String(formData.get("css") ?? "")),
     js: String(formData.get("js") ?? ""),
   };
 

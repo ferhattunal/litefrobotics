@@ -77,7 +77,7 @@ export function buildModuleMarkup(type: ModuleType, fields: ModuleFields): { htm
   <article><h2>${esc(f.feature2 || "Özellik")}</h2><p>${esc(f.feature2Text)}</p></article>
   <article><h2>${esc(f.feature3 || "Özellik")}</h2><p>${esc(f.feature3Text)}</p></article>
 </section>`,
-      css: `.lf-mod-features { max-width: 1120px; margin: 0 auto; padding: 56px 20px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      css: `.lf-mod-features { max-width: 1120px; margin: 0 auto; padding: 56px 20px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); background: var(--background, #f0f0f0); }
 .lf-mod-features article { background: #fff; padding: 24px; border-radius: 16px; box-shadow: 0 8px 24px rgba(15,23,42,.06); }
 .lf-mod-features h2 { margin: 0 0 8px; font-size: 20px; }
 .lf-mod-features p { margin: 0; color: #64748b; }`,
@@ -101,7 +101,7 @@ export function buildModuleMarkup(type: ModuleType, fields: ModuleFields): { htm
   if (type === "richtext") {
     return {
       html: `<section class="lf-mod-text"><h2>${esc(f.title || "Başlık")}</h2><p>${esc(f.text)}</p></section>`,
-      css: `.lf-mod-text { max-width: 800px; margin: 0 auto; padding: 56px 20px; }
+      css: `.lf-mod-text { max-width: 800px; margin: 0 auto; padding: 56px 20px; background: var(--background, #f0f0f0); }
 .lf-mod-text h2 { margin: 0 0 16px; font-size: 28px; }
 .lf-mod-text p { margin: 0; color: #57534e; line-height: 1.7; }`,
     };

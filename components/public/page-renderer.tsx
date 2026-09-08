@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { rewriteWarmCss } from "@/lib/css-theme";
 import type { ModuleRecord, PageRecord } from "@/lib/types";
 
 type Props = {
@@ -13,10 +14,9 @@ export function PageRenderer({ page, modules = [] }: Props) {
     page.render_mode === "modules"
       ? modules.map((module) => module.html).join("\n")
       : page.html;
-  const css =
-    page.render_mode === "modules"
-      ? modules.map((module) => module.css).join("\n")
-      : page.css;
+  const css = rewriteWarmCss(
+    page.render_mode === "modules" ? modules.map((module) => module.css).join("\n") : page.css,
+  );
   const js =
     page.render_mode === "modules"
       ? modules.map((module) => `(function(){\n${module.js}\n})();`).join("\n")

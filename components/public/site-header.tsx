@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SiteSearch } from "@/components/public/site-search";
+import { rewriteWarmCss } from "@/lib/css-theme";
 
 type Props = {
   html: string;
@@ -58,7 +59,7 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
   return (
     <>
       <header className="lf-site-header sticky top-0 z-40" onClick={onNavClick}>
-        <style>{css}</style>
+        <style>{rewriteWarmCss(css)}</style>
         <div className="hidden md:block" dangerouslySetInnerHTML={{ __html: html }} />
 
         <div className="lf-mobile-bar flex h-14 items-center justify-between gap-2 px-4 md:hidden">

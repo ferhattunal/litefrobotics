@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireStaff } from "../auth";
+import { rewriteWarmCss } from "../css-theme";
 
 export async function saveModule(formData: FormData) {
   const { admin } = await requireStaff();
@@ -11,7 +12,7 @@ export async function saveModule(formData: FormData) {
     name: String(formData.get("name") ?? "").trim(),
     module_type: String(formData.get("module_type") ?? "custom") || "custom",
     html: String(formData.get("html") ?? ""),
-    css: String(formData.get("css") ?? ""),
+    css: rewriteWarmCss(String(formData.get("css") ?? "")),
     js: String(formData.get("js") ?? ""),
   };
 

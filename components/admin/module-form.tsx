@@ -27,7 +27,7 @@ export function ModuleForm({ module }: Props) {
   const [advanced, setAdvanced] = useState(type === "custom" || Boolean(module?.html));
 
   const preview = useMemo(() => {
-    const doc = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#f3f0e8;font-family:system-ui,sans-serif;} ${css}</style></head><body>${html}<script>${js}</script></body></html>`;
+    const doc = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#f0f0f0;font-family:system-ui,sans-serif;} ${css}</style></head><body>${html}<script>${js}</script></body></html>`;
     return doc;
   }, [html, css, js]);
 
@@ -159,7 +159,7 @@ export function ModuleForm({ module }: Props) {
             title="Modül önizleme"
             sandbox="allow-scripts"
             srcDoc={preview}
-            className="mt-2 h-[420px] w-full rounded-2xl border border-stone-200 bg-[#f3f0e8]"
+            className="mt-2 h-[420px] w-full rounded-2xl border border-stone-200 bg-[#f0f0f0]"
           />
         </div>
       </div>

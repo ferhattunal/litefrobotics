@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { rewriteWarmCss } from "@/lib/css-theme";
 
 type Props = {
   html: string;
@@ -19,7 +20,7 @@ export function SiteFooter({ html, css, js }: Props) {
 
   return (
     <div className="mt-auto">
-      <style>{css}</style>
+      <style>{rewriteWarmCss(css)}</style>
       <div dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   );
