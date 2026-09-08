@@ -6,7 +6,7 @@ export default async function NewLandingPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold">Yeni landing page</h1>
-      <LandingForm modules={modules} />
+      <LandingForm modules={modules} defaultMode="modules" />
     </div>
   );
 }

@@ -4,6 +4,8 @@ export type { SiteConfig };
 
 export type RenderMode = "code" | "modules";
 
+export type ModuleType = "hero" | "features" | "cta" | "richtext" | "custom";
+
 export type ImageRatio = "1/1" | "4/3" | "16/9" | "3/4" | "auto";
 
 export type CardDesign = {
@@ -45,6 +47,7 @@ export type SiteSettings = {
 export type ModuleRecord = {
   id: string;
   name: string;
+  module_type?: ModuleType | string | null;
   html: string;
   css: string;
   js: string;

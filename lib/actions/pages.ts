@@ -65,7 +65,7 @@ export async function savePage(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/admin/landing");
+  redirect(`/admin/landing?page=${pageId}`);
 }
 
 export async function deletePage(formData: FormData) {
@@ -75,4 +75,89 @@ export async function deletePage(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath("/", "layout");
   redirect("/admin/landing");
+}
+
+export async function savePageLayout(formData: FormData) {
+  const { admin } = await requireStaff();
+  const pageId = String(formData.get("page_id") ?? "");
+  if (!pageId) throw new Error("Sayfa seçilmedi.");
+  const moduleIds = String(formData.get("module_ids") ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  const { error: pageError } = await admin.from("pages").update({ render_mode: "modules" }).eq("id", pageId);
+  if (pageError) throw new Error(pageError.message);
+
+  await admin.from("page_modules").delete().eq("page_id", pageId);
+  if (moduleIds.length) {
+    const rows = moduleIds.map((moduleId, index) => ({
+      page_id: pageId,
+      module_id: moduleId,
+      sort_order: index,
+    }));
+    const { error } = await admin.from("page_modules").insert(rows);
+    if (error) throw new Error(error.message);
+  }
+
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/landing");
+}
+
+export async function addSampleBlocks(formData: FormData) {
+  const { admin } = await requireStaff();
+  const pageId = String(formData.get("page_id") ?? "");
+  if (!pageId) throw new Error("Sayfa seçilmedi.");
+
+  const { SAMPLE_MODULES, buildModuleMarkup } = await import("../module-templates");
+  const { data: existing } = await admin.from("modules").select("id,name");
+  const byName = new Map((existing ?? []).map((row) => [String(row.name), String(row.id)]));
+  const ids: string[] = [];
+
+  for (const sample of SAMPLE_MODULES) {
+    const found = byName.get(sample.name);
+    if (found) {
+      ids.push(found);
+      continue;
+    }
+    const markup = buildModuleMarkup(sample.module_type, sample.fields);
+    const payload = {
+      name: sample.name,
+      module_type: sample.module_type,
+      html: markup.html,
+      css: markup.css,
+      js: "",
+    };
+    const inserted = await admin.from("modules").insert(payload).select("id").single();
+    if (inserted.error) {
+      const fallback = await admin
+        .from("modules")
+        .insert({ name: payload.name, html: payload.html, css: payload.css, js: "" })
+        .select("id")
+        .single();
+      if (fallback.error || !fallback.data) throw new Error(inserted.error.message);
+      ids.push(fallback.data.id);
+    } else if (inserted.data) {
+      ids.push(inserted.data.id);
+    }
+  }
+
+  const { data: current } = await admin.from("page_modules").select("module_id").eq("page_id", pageId).order("sort_order");
+  const currentIds = (current ?? []).map((row) => String(row.module_id));
+  const merged = [...currentIds];
+  for (const id of ids) {
+    if (!merged.includes(id)) merged.push(id);
+  }
+
+  await admin.from("pages").update({ render_mode: "modules" }).eq("id", pageId);
+  await admin.from("page_modules").delete().eq("page_id", pageId);
+  if (merged.length) {
+    const rows = merged.map((moduleId, index) => ({ page_id: pageId, module_id: moduleId, sort_order: index }));
+    const { error } = await admin.from("page_modules").insert(rows);
+    if (error) throw new Error(error.message);
+  }
+
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/landing");
+  revalidatePath("/admin/moduller");
 }

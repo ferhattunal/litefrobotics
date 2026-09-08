@@ -13,7 +13,6 @@ import {
   generateNavbarHtml,
   type FooterColumn,
   type FooterLink,
-  type NavLink,
   type SiteConfig,
 } from "@/lib/site-config";
 
@@ -37,10 +36,8 @@ export function SystemSettingsForm({ initial }: Props) {
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const [footerDevice, setFooterDevice] = useState<"desktop" | "mobile">("desktop");
   const [advanced, setAdvanced] = useState(false);
-  const [styleId, setStyleId] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
-  const links = device === "desktop" ? config.desktopLinks : config.mobileLinks;
   const previewHtml = useMemo(() => generateNavbarHtml(config, device), [config, device]);
   const previewCss = useMemo(() => generateNavbarCss(config), [config]);
   const footerPreviewHtml = useMemo(() => generateFooterHtml(config), [config]);
@@ -49,14 +46,6 @@ export function SystemSettingsForm({ initial }: Props) {
   function patch(partial: Partial<SiteConfig>) {
     setConfig((current) => ({ ...current, ...partial }));
     setSaved(false);
-  }
-
-  function setLinks(next: NavLink[]) {
-    patch(device === "desktop" ? { desktopLinks: next } : { mobileLinks: next });
-  }
-
-  function updateLink(id: string, partial: Partial<NavLink>) {
-    setLinks(links.map((item) => (item.id === id ? { ...item, ...partial } : item)));
   }
 
   return (
@@ -113,8 +102,11 @@ export function SystemSettingsForm({ initial }: Props) {
       <section className="settings-card">
         <h2>Navbar</h2>
         <p className="mt-1 text-sm text-stone-500">
-          Kod yazmadan masaüstü ve mobil butonları, renkleri ve hover stillerini ayrı ayrı düzenleyin. Önizleme seçilen
-          cihaza göre değişir.
+          Logo, renk ve hover stilleri burada. Menü bağlantıları için{" "}
+          <a href="/admin/menuler" className="text-orange-700 hover:underline">
+            Menüler
+          </a>{" "}
+          sayfasını kullanın.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <BrandAssetField label="Logo (WebP)" value={config.logoUrl} onChange={(logoUrl) => patch({ logoUrl })} />
@@ -147,42 +139,7 @@ export function SystemSettingsForm({ initial }: Props) {
         </div>
 
         <div className="mt-6">
-          <p className="settings-kicker">{device === "desktop" ? "Masaüstü butonları" : "Mobil butonları"}</p>
-          <div className="mt-3 space-y-2">
-            {links.map((item, index) => (
-              <div key={item.id} className="grid gap-2 md:grid-cols-[1fr_1fr_auto] md:items-center">
-                <input className="settings-input" value={item.label} onChange={(e) => updateLink(item.id, { label: e.target.value })} />
-                <input className="settings-input" value={item.href} onChange={(e) => updateLink(item.id, { href: e.target.value })} />
-                <div className="flex items-center gap-1">
-                  <button type="button" className="settings-mini" onClick={() => setStyleId(styleId === item.id ? null : item.id)}>
-                    Stil
-                  </button>
-                  <button type="button" className="settings-icon" onClick={() => setLinks(move(links, index, -1))}>
-                    ↑
-                  </button>
-                  <button type="button" className="settings-icon" onClick={() => setLinks(move(links, index, 1))}>
-                    ↓
-                  </button>
-                  <button type="button" className="settings-icon text-red-400" onClick={() => setLinks(links.filter((row) => row.id !== item.id))}>
-                    ⌫
-                  </button>
-                </div>
-                {styleId === item.id ? (
-                  <label className="md:col-span-3">
-                    <span className="settings-kicker">Yazı rengi</span>
-                    <input className="settings-input max-w-48" value={item.color} placeholder="#e5e7eb" onChange={(e) => updateLink(item.id, { color: e.target.value })} />
-                  </label>
-                ) : null}
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="mt-3 text-sm text-orange-700"
-            onClick={() => setLinks([...links, { id: nid(), label: "Yeni", href: "/", color: "" }])}
-          >
-            + Buton ekle
-          </button>
+          <p className="settings-kicker">{device === "desktop" ? "Masaüstü önizleme" : "Mobil önizleme"}</p>
         </div>
 
         <div className="mt-5 flex flex-wrap gap-6 text-sm">

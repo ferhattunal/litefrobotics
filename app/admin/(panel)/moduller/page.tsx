@@ -19,6 +19,7 @@ export default async function ModulesPage() {
           <thead className="bg-stone-50 text-stone-500">
             <tr>
               <th className="px-4 py-3">Ad</th>
+              <th className="px-4 py-3">Tip</th>
               <th className="px-4 py-3">İşlem</th>
             </tr>
           </thead>
@@ -26,6 +27,7 @@ export default async function ModulesPage() {
             {modules.map((module) => (
               <tr key={module.id} className="border-t">
                 <td className="px-4 py-3">{module.name}</td>
+                <td className="px-4 py-3 text-stone-500">{module.module_type || "custom"}</td>
                 <td className="flex gap-4 px-4 py-3">
                   <Link href={`/admin/moduller/${module.id}`} className="text-orange-700">
                     Düzenle

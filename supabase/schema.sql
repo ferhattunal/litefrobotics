@@ -21,6 +21,7 @@ create table if not exists public.admin_users (
 create table if not exists public.modules (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  module_type text not null default 'custom',
   html text not null default '',
   css text not null default '',
   js text not null default '',

@@ -125,4 +125,9 @@ export const Icons = {
       <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4" />
     </Svg>
   ),
+  menu: (props: IconProps) => (
+    <Svg {...props}>
+      <path d="M4 7h16M4 12h16M4 17h10" />
+    </Svg>
+  ),
 };

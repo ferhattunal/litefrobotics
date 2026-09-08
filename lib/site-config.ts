@@ -271,7 +271,7 @@ function actionButtons(config: SiteConfig) {
   if (config.showWhatsappButton && whatsapp) {
     bits.push(`<a class="lf-action lf-wa" href="https://wa.me/${escapeHtml(whatsapp)}" target="_blank" rel="noreferrer">WhatsApp</a>`);
   }
-  bits.push(`<a class="lf-search" href="/kategoriler">Ara</a>`);
+  bits.push(`<button type="button" class="lf-search">Ara</button>`);
   return bits.join("");
 }
 
@@ -303,7 +303,7 @@ export function generateNavbarCss(config: SiteConfig) {
 .lf-links { display: flex; align-items: center; gap: 18px; flex-wrap: nowrap; min-width: 0; }
 .lf-links a { color: ${fg}; text-decoration: none; font-size: 14px; font-weight: 500; position: relative; opacity: 0.88; white-space: nowrap; }
 .lf-actions { display: flex; align-items: center; gap: 8px; }
-.lf-search, .lf-action { border: 1px solid color-mix(in srgb, ${fg} 28%, transparent); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: ${fg}; text-decoration: none; }
+.lf-search, .lf-action { border: 1px solid color-mix(in srgb, ${fg} 28%, transparent); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: ${fg}; text-decoration: none; background: transparent; cursor: pointer; font-family: inherit; }
 .lf-hover-underline .lf-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: ${fg}; transform: scaleX(0); transition: transform .2s; }
 .lf-hover-underline .lf-links a:hover::after { transform: scaleX(1); }
 .lf-hover-color .lf-links a:hover { opacity: 1; }

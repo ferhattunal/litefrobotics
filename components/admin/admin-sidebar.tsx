@@ -4,8 +4,10 @@ import { Icons } from "@/components/admin/admin-icons";
 import type { UserRole } from "@/lib/types";
 
 const TOP = [
+  { href: "/admin", label: "Özet", icon: "grid" },
   { href: "/admin/landing", label: "Sayfa Düzeni", icon: "layers" },
   { href: "/admin/moduller", label: "Modül Oluşturma", icon: "grid" },
+  { href: "/admin/menuler", label: "Menüler", icon: "menu" },
 ] as const;
 
 const GROUPS = [

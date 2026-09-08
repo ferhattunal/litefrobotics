@@ -82,5 +82,6 @@ export async function saveSiteSettings(formData: FormData) {
 
   revalidatePath("/", "layout");
   revalidatePath("/admin/ayarlar");
+  revalidatePath("/admin/menuler");
   revalidatePath("/iletisim");
 }

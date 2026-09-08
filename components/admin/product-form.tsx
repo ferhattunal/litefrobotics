@@ -202,9 +202,9 @@ export function ProductForm({ product, categories, pages, defaultCategoryId }: P
           name="specs_xml"
           value={specsXml}
           onChange={(event) => setSpecsXml(event.target.value)}
-          placeholder={'<specs>\n  <payload>6 kg</payload>\n  <reach>1400 mm</reach>\n</specs>'}
+          placeholder={'<Item>\n  <NameEn>Manufacturer</NameEn>\n  <NameTr>Üretici</NameTr>\n  <Value>LiTEF</Value>\n</Item>'}
         />
-        {specsXml.trim() && !specs ? <p className="text-sm text-red-600">XML okunamadı. Yaprak etiketler kullanın.</p> : null}
+        {specsXml.trim() && !specs ? <p className="text-sm text-red-600">XML okunamadı. NameTr/Value kayıtları veya yaprak etiketler kullanın.</p> : null}
         {specs ? (
           <ul className="text-sm text-stone-600">
             {specs.map((row) => (

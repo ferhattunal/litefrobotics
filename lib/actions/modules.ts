@@ -9,6 +9,7 @@ export async function saveModule(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const payload = {
     name: String(formData.get("name") ?? "").trim(),
+    module_type: String(formData.get("module_type") ?? "custom") || "custom",
     html: String(formData.get("html") ?? ""),
     css: String(formData.get("css") ?? ""),
     js: String(formData.get("js") ?? ""),
@@ -20,10 +21,21 @@ export async function saveModule(formData: FormData) {
 
   if (id) {
     const { error } = await admin.from("modules").update(payload).eq("id", id);
-    if (error) throw new Error(error.message);
+    if (error) {
+      const fallback = await admin
+        .from("modules")
+        .update({ name: payload.name, html: payload.html, css: payload.css, js: payload.js })
+        .eq("id", id);
+      if (fallback.error) throw new Error(fallback.error.message);
+    }
   } else {
     const { error } = await admin.from("modules").insert(payload);
-    if (error) throw new Error(error.message);
+    if (error) {
+      const fallback = await admin
+        .from("modules")
+        .insert({ name: payload.name, html: payload.html, css: payload.css, js: payload.js });
+      if (fallback.error) throw new Error(fallback.error.message);
+    }
   }
 
   revalidatePath("/", "layout");

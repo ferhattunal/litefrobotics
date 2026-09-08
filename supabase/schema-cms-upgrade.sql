@@ -107,3 +107,7 @@ using (
     'documents'
   )
 );
+
+alter table public.modules
+  add column if not exists module_type text not null default 'custom';
+
