@@ -16,7 +16,7 @@ export function slugify(text: string) {
 }
 
 export function isReservedSlug(slug: string) {
-  return RESERVED_SLUGS.includes(slug as (typeof RESERVED_SLUGS)[number]);
+  return RESERVED_SLUGS.includes(slug);
 }
 
 export function extractMapsEmbedUrl(input: string) {

@@ -1,41 +1,48 @@
 import Link from "next/link";
+import { PublicImage } from "@/components/public/public-image";
 import { cardStyle, imageRatioStyle, resolveCardDesign } from "@/lib/card-design";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { localePath } from "@/lib/i18n/href";
+import { asLocale, type Locale } from "@/lib/i18n/config";
 import { productPriceLabel, productStockBadge } from "@/lib/product-display";
 import type { Category, Product, ProductImage } from "@/lib/types";
 
 type Props = {
   product: Product & { product_images?: ProductImage[] };
   category?: Category | null;
+  locale?: Locale | string;
 };
 
-export function ProductCard({ product, category }: Props) {
+export function ProductCard({ product, category, locale = "tr" }: Props) {
+  const lang = asLocale(locale);
+  const copy = getDictionary(lang);
   const design = resolveCardDesign(product, category);
   const image = product.product_images?.slice().sort((a, b) => a.sort_order - b.sort_order)[0];
   const price = product.show_price_on_card !== false ? productPriceLabel(product) : "";
   const stock = product.show_stock_badge_on_card !== false ? productStockBadge(product) : "";
   const inStock = product.in_stock && product.stock_qty > 0;
   const brandLine = [product.brand, product.series || product.model].filter(Boolean).join(" · ");
+  const stockLabel = stock ? (inStock ? copy.products.stockBadge : copy.products.stockOut) : "";
 
   return (
     <Link
-      href={`/urunler/${product.slug}`}
+      href={localePath(lang, "products", product.slug)}
       className={`lf-product-card flex h-full min-w-0 flex-col overflow-hidden ${design.hoverPan ? "lf-product-card-pan" : ""}`}
       style={cardStyle(design)}
     >
       <div className="lf-product-card-image relative w-full overflow-hidden bg-[#eef1f4]" style={imageRatioStyle(design)}>
         {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={image.url} alt={product.name} />
+          <PublicImage src={image.url} alt={product.name} fill className="object-contain p-3" sizes="(max-width: 640px) 100vw, 33vw" />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-sm text-stone-400">Görsel yok</div>
+          <div className="absolute inset-0 flex items-center justify-center text-sm text-stone-400">{copy.common.noImage}</div>
         )}
         <div className="absolute top-2 right-2 z-10 flex max-w-[calc(100%-1rem)] flex-col items-end gap-1.5">
-          {stock ? (
+          {stockLabel ? (
             <span
               className="rounded-full px-2.5 py-1 text-[10px] font-semibold text-white"
               style={{ background: inStock ? "var(--lf-625)" : "#78716c" }}
             >
-              {stock}
+              {stockLabel}
             </span>
           ) : null}
           {price ? (
@@ -66,7 +73,7 @@ export function ProductCard({ product, category }: Props) {
             <circle cx="11" cy="11" r="7" />
             <path d="m20 20-3-3" />
           </svg>
-          Ürünü incele
+          {copy.products.view}
         </span>
       </div>
     </Link>

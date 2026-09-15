@@ -36,7 +36,7 @@ export default async function ProductsAdminPage() {
                   <p className="text-sm text-stone-500">{items.length} ürün</p>
                 </div>
                 <div className="flex flex-wrap gap-4 text-sm">
-                  <Link href={`/kategoriler/${category.slug}`} className="text-stone-500 hover:text-stone-800" target="_blank">
+                  <Link href={`/tr/kategoriler/${category.slug}`} className="text-stone-500 hover:text-stone-800" target="_blank">
                     Site
                   </Link>
                   <Link href={`/admin/kategoriler/${category.id}`} className="text-stone-500 hover:text-stone-800">

@@ -22,6 +22,7 @@ const GROUPS = [
     group: "İÇERİK",
     items: [
       { href: "/admin/teklif-talepleri", label: "Teklif Talepleri", icon: "handshake" },
+      { href: "/admin/leads", label: "Leads", icon: "handshake" },
       { href: "/admin/bayiler", label: "Bayiler", icon: "pin" },
       { href: "/admin/fiyat-listesi", label: "Fiyat Listesi", icon: "file" },
       { href: "/admin/kiralama", label: "Kiralama", icon: "key" },

@@ -16,7 +16,7 @@ export default function GlobalError({
         <button type="button" onClick={reset} className="rounded-lg bg-stone-900 px-4 py-2 text-white">
           Tekrar dene
         </button>
-        <a href="/" className="rounded-lg border px-4 py-2">
+        <a href="/tr" className="rounded-lg border px-4 py-2">
           Ana sayfa
         </a>
       </div>

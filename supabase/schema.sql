@@ -452,6 +452,17 @@ create table if not exists public.quote_requests (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.leads (
+  id uuid primary key default gen_random_uuid(),
+  full_name text not null,
+  phone text not null default '',
+  company text not null default '',
+  interested_product text not null default '',
+  language text not null default 'tr',
+  utm_source text not null default '',
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.dealers (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -520,6 +531,7 @@ create table if not exists public.slides (
 );
 
 alter table public.quote_requests enable row level security;
+alter table public.leads enable row level security;
 alter table public.dealers enable row level security;
 alter table public.price_lists enable row level security;
 alter table public.rentals enable row level security;

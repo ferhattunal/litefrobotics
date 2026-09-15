@@ -11,6 +11,7 @@ import type {
   ReferenceItem,
   Rental,
   Slide,
+  Lead,
 } from "./types";
 
 function db() {
@@ -45,6 +46,17 @@ export async function getQuotes() {
     const admin = createAdminSupabase();
     const { data } = await admin.from("quote_requests").select("*").order("created_at", { ascending: false });
     return (data ?? []) as QuoteRequest[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getLeads() {
+  if (!hasSupabaseEnv() || !process.env.SUPABASE_SERVICE_ROLE_KEY) return [];
+  try {
+    const admin = createAdminSupabase();
+    const { data } = await admin.from("leads").select("*").order("created_at", { ascending: false });
+    return (data ?? []) as Lead[];
   } catch {
     return [];
   }

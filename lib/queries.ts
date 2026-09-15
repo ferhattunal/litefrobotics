@@ -1,6 +1,8 @@
 import { createAdminSupabase } from "./supabase/admin";
 import { createQuerySupabase } from "./supabase/query";
 import { hasSupabaseEnv } from "./utils";
+import { asLocale } from "./i18n/config";
+import { localePath } from "./i18n/href";
 import type {
   AboutPage,
   BlogPost,
@@ -203,8 +205,9 @@ function firstProductImage(images: { url: string; sort_order: number }[] | null 
   return images?.slice().sort((a, b) => a.sort_order - b.sort_order)[0]?.url ?? null;
 }
 
-export async function searchCatalog(rawQuery: string): Promise<SearchCatalogResult> {
+export async function searchCatalog(rawQuery: string, locale = "tr"): Promise<SearchCatalogResult> {
   const empty: SearchCatalogResult = { products: [], categories: [] };
+  const lang = asLocale(locale);
   return run(empty, async () => {
     const supabase = db();
     const term = sanitizeSearchTerm(rawQuery);
@@ -213,7 +216,7 @@ export async function searchCatalog(rawQuery: string): Promise<SearchCatalogResu
       id: row.id,
       name: row.name,
       slug: row.slug,
-      href: `/kategoriler/${row.slug}`,
+      href: localePath(lang, "categories", row.slug),
       image: row.hero_image_url || null,
     });
 
@@ -241,7 +244,7 @@ export async function searchCatalog(rawQuery: string): Promise<SearchCatalogResu
       brand: row.brand || "",
       series: row.series || "",
       model: row.model || "",
-      href: `/urunler/${row.slug}`,
+      href: localePath(lang, "products", row.slug),
       image: firstProductImage(row.product_images),
       category: categoryName(row.categories),
     });

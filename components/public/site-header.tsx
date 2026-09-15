@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PublicImage } from "@/components/public/public-image";
 import { SiteSearch } from "@/components/public/site-search";
 import { rewriteWarmCss } from "@/lib/css-theme";
+import type { Locale } from "@/lib/i18n/config";
 
 type Props = {
   html: string;
@@ -10,9 +12,21 @@ type Props = {
   js?: string;
   brandName?: string;
   logoUrl?: string;
+  locale: Locale;
+  homeHref: string;
+  searchLabel: string;
 };
 
-export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUrl }: Props) {
+export function SiteHeader({
+  html,
+  css,
+  js,
+  brandName = "Litef Robotics",
+  logoUrl,
+  locale,
+  homeHref,
+  searchLabel,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -63,10 +77,11 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
         <div className="hidden md:block" dangerouslySetInnerHTML={{ __html: html }} />
 
         <div className="lf-mobile-bar flex h-14 items-center justify-between gap-2 px-4 md:hidden">
-          <a href="/" className="inline-flex min-w-0 items-center">
+          <a href={homeHref} className="inline-flex min-w-0 items-center">
             {logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={logoUrl} alt={brandName} className="h-8 w-auto max-w-[140px] object-contain" />
+              <span className="relative h-8 w-[140px]">
+                <PublicImage src={logoUrl} alt={brandName} fill className="object-contain object-left" sizes="140px" />
+              </span>
             ) : (
               <span className="truncate text-sm font-semibold tracking-wide uppercase">{brandName}</span>
             )}
@@ -74,7 +89,7 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
           <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
-              aria-label="Ara"
+              aria-label={searchLabel}
               onClick={openSearch}
               className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-stone-300"
             >
@@ -130,7 +145,7 @@ export function SiteHeader({ html, css, js, brandName = "Litef Robotics", logoUr
           </div>
         </div>
       </header>
-      <SiteSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SiteSearch open={searchOpen} onClose={() => setSearchOpen(false)} locale={locale} />
     </>
   );
 }

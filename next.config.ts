@@ -21,15 +21,20 @@ const nextConfig: NextConfig = {
     ],
   },
   images: {
-    remotePatterns: hostname
-      ? [
-          {
-            protocol: "https",
-            hostname,
-            pathname: "/storage/v1/object/public/**",
-          },
-        ]
-      : [],
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      ...(hostname
+        ? [
+            {
+              protocol: "https" as const,
+              hostname,
+              pathname: "/storage/v1/object/public/**",
+            },
+          ]
+        : []),
+      { protocol: "https", hostname: "**" },
+      { protocol: "http", hostname: "localhost" },
+    ],
   },
 };
 

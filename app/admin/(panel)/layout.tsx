@@ -11,7 +11,7 @@ export default async function AdminPanelLayout({ children }: { children: React.R
       <div className="min-w-0">
         <div className="flex items-center justify-between border-b border-stone-200 bg-white px-6 py-4">
           <p className="text-sm text-stone-500">Yönetim Paneli</p>
-          <Link href="/" className="text-sm text-orange-700 hover:underline" target="_blank">
+          <Link href="/tr" className="text-sm text-orange-700 hover:underline" target="_blank">
             Siteyi gör
           </Link>
         </div>

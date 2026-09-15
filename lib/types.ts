@@ -185,6 +185,17 @@ export type QuoteRequest = {
   created_at: string;
 };
 
+export type Lead = {
+  id: string;
+  full_name: string;
+  phone: string;
+  company: string;
+  interested_product: string;
+  language: string;
+  utm_source: string;
+  created_at: string;
+};
+
 export type Dealer = {
   id: string;
   name: string;

@@ -1,4 +1,6 @@
 import { colorFillCss, contrastOn, DEFAULT_FOOTER_FILL, DEFAULT_NAV_FILL, parseColorFill } from "./color-fill";
+import { defaultLocale, type Locale } from "./i18n/config";
+import { localePath, localizeKnownHref, rewriteHtmlHrefs } from "./i18n/href";
 import type { ColorFill } from "./types";
 
 export type HoverAnimation = "underline" | "color" | "background" | "none";
@@ -254,11 +256,12 @@ function escapeHtml(value: string) {
     .replaceAll('"', "&quot;");
 }
 
-function brandMarkup(config: SiteConfig) {
+function brandMarkup(config: SiteConfig, locale: Locale = defaultLocale) {
+  const home = localePath(locale, "home");
   if (config.logoUrl) {
-    return `<a class="lf-logo" href="/"><img src="${escapeHtml(config.logoUrl)}" alt="${escapeHtml(config.brandName || "Litef Robotics")}" /></a>`;
+    return `<a class="lf-logo" href="${home}"><img src="${escapeHtml(config.logoUrl)}" alt="${escapeHtml(config.brandName || "Litef Robotics")}" /></a>`;
   }
-  return `<a class="lf-logo" href="/">${escapeHtml(config.brandName || "Litef Robotics")}</a>`;
+  return `<a class="lf-logo" href="${home}">${escapeHtml(config.brandName || "Litef Robotics")}</a>`;
 }
 
 function actionButtons(config: SiteConfig) {
@@ -279,13 +282,13 @@ function linkStyle(item: NavLink) {
   return item.color ? ` style="color:${escapeHtml(item.color)}"` : "";
 }
 
-export function generateNavbarHtml(config: SiteConfig, device: "desktop" | "mobile" = "desktop") {
+export function generateNavbarHtml(config: SiteConfig, device: "desktop" | "mobile" = "desktop", locale: Locale = defaultLocale) {
   const items = device === "mobile" ? config.mobileLinks : config.desktopLinks;
   const links = items
-    .map((item) => `<a href="${escapeHtml(item.href)}"${linkStyle(item)}>${escapeHtml(item.label)}</a>`)
+    .map((item) => `<a href="${escapeHtml(localizeKnownHref(locale, item.href))}"${linkStyle(item)}>${escapeHtml(item.label)}</a>`)
     .join("\n      ");
   return `<nav class="lf-nav lf-hover-${config.hoverAnimation}">
-  ${brandMarkup(config)}
+  ${brandMarkup(config, locale)}
   <div class="lf-links">
       ${links}
   </div>
@@ -320,7 +323,7 @@ function replaceYear(value: string) {
   return value.replaceAll("{year}", String(new Date().getFullYear()));
 }
 
-export function generateFooterHtml(config: SiteConfig) {
+export function generateFooterHtml(config: SiteConfig, locale: Locale = defaultLocale) {
   const columns = config.footerColumns
     .map((column) => {
       if (column.type === "contact") {
@@ -335,7 +338,7 @@ export function generateFooterHtml(config: SiteConfig) {
     </div>`;
       }
       const links = column.links
-        .map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`)
+        .map((item) => `<a href="${escapeHtml(localizeKnownHref(locale, item.href))}">${escapeHtml(item.label)}</a>`)
         .join("");
       return `<div class="lf-col">
       <h3>${escapeHtml(column.title)}</h3>
@@ -352,13 +355,13 @@ export function generateFooterHtml(config: SiteConfig) {
     .join("");
 
   const bottom = config.footerLinks
-    .map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`)
+    .map((item) => `<a href="${escapeHtml(localizeKnownHref(locale, item.href))}">${escapeHtml(item.label)}</a>`)
     .join("");
 
   return `<footer class="lf-footer">
   <div class="lf-footer-inner">
     <div class="lf-brand">
-      ${brandMarkup(config)}
+      ${brandMarkup(config, locale)}
       <p>${escapeHtml(config.footerIntro)}</p>
       <div class="lf-social">${social}</div>
     </div>
@@ -384,17 +387,19 @@ export function generateFooterCss(config: SiteConfig) {
 ${config.footerCss}`;
 }
 
-export function publicNavbar(config: SiteConfig) {
+export function publicNavbar(config: SiteConfig, locale: Locale = defaultLocale) {
+  const html = config.navbarHtml.trim() || generateNavbarHtml(config, "desktop", locale);
   return {
-    html: config.navbarHtml.trim() || generateNavbarHtml(config, "desktop"),
+    html: rewriteHtmlHrefs(html, locale),
     css: generateNavbarCss(config),
     js: config.navbarJs,
   };
 }
 
-export function publicFooter(config: SiteConfig) {
+export function publicFooter(config: SiteConfig, locale: Locale = defaultLocale) {
+  const html = config.footerHtml.trim() || generateFooterHtml(config, locale);
   return {
-    html: config.footerHtml.trim() || generateFooterHtml(config),
+    html: rewriteHtmlHrefs(html, locale),
     css: generateFooterCss(config),
     js: config.footerJs,
   };

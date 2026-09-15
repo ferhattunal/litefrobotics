@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { PublicImage } from "@/components/public/public-image";
+import type { Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionary";
 import type { SearchCatalogResult, SearchCategoryHit, SearchProductHit } from "@/lib/queries";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  locale: Locale;
 };
 
 const EMPTY: SearchCatalogResult = { products: [], categories: [] };
@@ -14,7 +18,8 @@ function brandLine(product: SearchProductHit) {
   return [product.brand, product.series || product.model].filter(Boolean).join(" · ");
 }
 
-export function SiteSearch({ open, onClose }: Props) {
+export function SiteSearch({ open, onClose, locale }: Props) {
+  const copy = getDictionary(locale);
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
@@ -54,7 +59,7 @@ export function SiteSearch({ open, onClose }: Props) {
     const timer = window.setTimeout(async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}`, {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}&lang=${locale}`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error("search failed");
@@ -73,7 +78,7 @@ export function SiteSearch({ open, onClose }: Props) {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [open, query]);
+  }, [open, query, locale]);
 
   if (!open) return null;
 
@@ -84,7 +89,7 @@ export function SiteSearch({ open, onClose }: Props) {
     <div className="fixed inset-0 z-[80] flex items-start justify-center px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-6 sm:px-6 sm:pt-[12vh]">
       <button
         type="button"
-        aria-label="Aramayı kapat"
+        aria-label={copy.search.closeSearch}
         className="absolute inset-0 bg-stone-900/45 backdrop-blur-md"
         onClick={onClose}
       />
@@ -107,7 +112,7 @@ export function SiteSearch({ open, onClose }: Props) {
             id={inputId}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Ürün, kategori, marka veya model ara…"
+            placeholder={copy.search.placeholder}
             autoComplete="off"
             enterKeyHint="search"
             className="min-w-0 flex-1 bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 sm:text-[17px]"
@@ -118,34 +123,34 @@ export function SiteSearch({ open, onClose }: Props) {
               onClick={() => setQuery("")}
               className="rounded-full px-2 py-1 text-xs font-medium text-stone-500 hover:bg-white/70"
             >
-              Temizle
+              {copy.search.clear}
             </button>
           ) : null}
           <button
             type="button"
             onClick={onClose}
             className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-white/70 text-lg text-stone-700"
-            aria-label="Kapat"
+            aria-label={copy.search.close}
           >
             ×
           </button>
         </form>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-5">
-          {loading ? <p className="px-2 py-6 text-sm text-stone-500">Aranıyor…</p> : null}
+          {loading ? <p className="px-2 py-6 text-sm text-stone-500">{copy.search.searching}</p> : null}
           {!loading && empty ? (
             <p className="px-2 py-6 text-sm text-stone-500">
-              {hasQuery ? "Eşleşen ürün veya kategori bulunamadı." : "Aramaya başlamak için yazın."}
+              {hasQuery ? copy.search.empty : copy.search.start}
             </p>
           ) : null}
           {!loading && results.categories.length ? (
             <section className="mb-5">
               <h2 className="px-2 text-[11px] font-semibold tracking-[0.14em] text-[var(--lf-625)] uppercase">
-                Kategoriler
+                {copy.search.categories}
               </h2>
               <ul className="mt-2 grid gap-1">
                 {results.categories.map((category) => (
-                  <CategoryRow key={category.id} category={category} />
+                  <CategoryRow key={category.id} category={category} kicker={copy.search.category} />
                 ))}
               </ul>
             </section>
@@ -153,7 +158,7 @@ export function SiteSearch({ open, onClose }: Props) {
           {!loading && results.products.length ? (
             <section>
               <h2 className="px-2 text-[11px] font-semibold tracking-[0.14em] text-[var(--lf-625)] uppercase">
-                {hasQuery ? "Ürünler" : "Vitrin"}
+                {hasQuery ? copy.search.products : copy.search.showcase}
               </h2>
               <ul className="mt-2 grid gap-1">
                 {results.products.map((product) => (
@@ -168,22 +173,19 @@ export function SiteSearch({ open, onClose }: Props) {
   );
 }
 
-function CategoryRow({ category }: { category: SearchCategoryHit }) {
+function CategoryRow({ category, kicker }: { category: SearchCategoryHit; kicker: string }) {
   return (
     <li>
       <a
         href={category.href}
         className="flex items-center gap-3 rounded-2xl px-2 py-2 transition hover:bg-white/80"
       >
-        <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#eef1f4]">
-          {category.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={category.image} alt="" className="h-full w-full object-cover" />
-          ) : null}
+        <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#eef1f4]">
+          {category.image ? <PublicImage src={category.image} alt="" fill className="object-cover" sizes="48px" /> : null}
         </span>
         <span className="min-w-0">
           <span className="block truncate font-medium text-stone-900">{category.name}</span>
-          <span className="text-xs text-stone-500">Kategori</span>
+          <span className="text-xs text-stone-500">{kicker}</span>
         </span>
       </a>
     </li>
@@ -198,11 +200,8 @@ function ProductRow({ product }: { product: SearchProductHit }) {
         href={product.href}
         className="flex items-center gap-3 rounded-2xl px-2 py-2 transition hover:bg-white/80"
       >
-        <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#eef1f4]">
-          {product.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.image} alt="" className="h-full w-full object-contain p-1" />
-          ) : null}
+        <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#eef1f4]">
+          {product.image ? <PublicImage src={product.image} alt="" fill className="object-contain p-1" sizes="48px" /> : null}
         </span>
         <span className="min-w-0">
           <span className="block truncate font-medium text-stone-900">{product.name}</span>

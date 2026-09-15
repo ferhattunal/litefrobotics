@@ -1,11 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { asLocale, type Locale } from "@/lib/i18n/config";
 import type { SpecPair } from "@/lib/specs-xml";
 
 const PAGE_SIZE = 8;
 
-export function SpecsTable({ rows }: { rows: SpecPair[] }) {
+export function SpecsTable({ rows, locale = "tr" }: { rows: SpecPair[]; locale?: Locale | string }) {
+  const copy = getDictionary(asLocale(locale));
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
@@ -27,7 +30,7 @@ export function SpecsTable({ rows }: { rows: SpecPair[] }) {
   return (
     <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="flex items-end justify-between gap-4">
-        <h2 className="text-2xl font-semibold tracking-tight">Teknik özellikler</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">{copy.products.specs}</h2>
         <p className="text-sm text-stone-400">
           {from}-{to} / {filtered.length}
         </p>
@@ -36,7 +39,7 @@ export function SpecsTable({ rows }: { rows: SpecPair[] }) {
         <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-stone-400">⌕</span>
         <input
           className="w-full rounded-xl border border-stone-200 bg-white py-3 pr-4 pl-9 text-sm outline-none focus:border-[var(--lf-625)]"
-          placeholder="Özellik veya değer ara…"
+          placeholder={copy.products.specSearch}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -57,7 +60,7 @@ export function SpecsTable({ rows }: { rows: SpecPair[] }) {
             ))}
           </tbody>
         </table>
-        {!slice.length ? <p className="px-5 py-8 text-sm text-stone-400">Eşleşen özellik yok.</p> : null}
+        {!slice.length ? <p className="px-5 py-8 text-sm text-stone-400">{copy.products.specEmpty}</p> : null}
         <div className="flex items-center justify-between gap-3 border-t border-stone-100 px-4 py-3 sm:px-5">
           <button
             type="button"
@@ -65,10 +68,10 @@ export function SpecsTable({ rows }: { rows: SpecPair[] }) {
             disabled={current <= 1}
             onClick={() => setPage((value) => Math.max(1, value - 1))}
           >
-            &lt; Önceki
+            &lt; {copy.common.previous}
           </button>
           <p className="text-sm text-stone-500">
-            Sayfa {current} / {pageCount}
+            {copy.common.page} {current} / {pageCount}
           </p>
           <button
             type="button"
@@ -76,7 +79,7 @@ export function SpecsTable({ rows }: { rows: SpecPair[] }) {
             disabled={current >= pageCount}
             onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
           >
-            Sonraki &gt;
+            {copy.common.next} &gt;
           </button>
         </div>
       </div>

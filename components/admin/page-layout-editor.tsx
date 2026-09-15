@@ -32,7 +32,7 @@ export function PageLayoutEditor({ pages, modules, assigned, selectedPage }: Pro
     [selected, modules],
   );
 
-  const livePath = selectedPage.is_homepage ? "/" : `/${selectedPage.slug}`;
+  const livePath = selectedPage.is_homepage ? "/tr" : `/tr/${selectedPage.slug}`;
 
   useEffect(() => {
     setSelected(

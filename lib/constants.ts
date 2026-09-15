@@ -1,21 +1,6 @@
-export const RESERVED_SLUGS = [
-  "admin",
-  "api",
-  "blog",
-  "haberler",
-  "kategoriler",
-  "urunler",
-  "hakkimizda",
-  "iletisim",
-  "login",
-  "teklif",
-  "bayiler",
-  "fiyat-listesi",
-  "kiralama",
-  "galeri",
-  "referanslar",
-  "sss",
-] as const;
+import { allPathSegments } from "./i18n/pathnames";
+
+export const RESERVED_SLUGS = allPathSegments();
 
 export const STORAGE_BUCKETS = [
   "product-images",
